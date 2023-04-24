@@ -1,0 +1,11 @@
+v: 0
+micros:
+  - name: stock-notifier
+    src: .
+    engine: nodejs16
+    dev: 'npm run dev'
+    commands:
+      - npm run build
+    include:
+      - dist
+    run: 'node dist/server.js'
