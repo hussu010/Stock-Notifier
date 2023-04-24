@@ -1,23 +1,27 @@
-import { stockSymbolData } from './notifications.interface';
+import Notification from './notifications.model';
+import { sendMessageToDiscord } from '../common/utils/discord';
 
-const binarySearchStockArray = (
-  stockSymbolData: stockSymbolData[],
-  symbol: string
-): stockSymbolData => {
-  let min = 0;
-  let max = stockSymbolData.length - 1;
-  let mid = 0;
-  while (min <= max) {
-    mid = Math.floor((min + max) / 2);
-    if (stockSymbolData[mid].symbol === symbol) {
-      return stockSymbolData[mid];
-    } else if (stockSymbolData[mid].symbol < symbol) {
-      min = mid + 1;
-    } else {
-      max = mid - 1;
-    }
+const createNotification = async (
+  stockId: number,
+  symbol: string,
+  title: string,
+  price: string,
+  type: string
+) => {
+  try {
+    const notification = await Notification.create({
+      stockId,
+      symbol,
+      title,
+      price,
+      type,
+    });
+    const notificationMessage = `${title}\nAlert Type: ${type}\nPrice: Rs. ${price}`;
+    sendMessageToDiscord(`Created alert for ${symbol}`, notificationMessage);
+    return notification;
+  } catch (error: any) {
+    throw new Error(error.message);
   }
-  return { id: 0, symbol: '', name: '', type: '', sector_id: 0 };
 };
 
-export { binarySearchStockArray };
+export { createNotification };
