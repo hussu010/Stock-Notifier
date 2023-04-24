@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import Notification from './notifications.model';
 import { errorMessages } from '../common/config/messages';
+import { createNotification } from './notifications.service';
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,13 +16,13 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { symbol, price, type, stockId, title } = req.body;
-    const notification = await Notification.create({
+    const notification = await createNotification(
       stockId,
       symbol,
       title,
       price,
-      type,
-    });
+      type
+    );
     res.status(201).json(notification);
   } catch (error) {
     next(error);

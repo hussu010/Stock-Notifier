@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { body, param } from 'express-validator';
 import { NotificationTypeEnum } from './notifications.interface';
 import { stockSymbolData } from '../common/config/constants';
-import { binarySearchStockArray } from './notifications.service';
+import { binarySearchStockArray } from './notifications.utils';
 import { errorMessages } from '../common/config/messages';
 
 const createNotificationSchema = [
