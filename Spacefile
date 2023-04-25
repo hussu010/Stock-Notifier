@@ -9,6 +9,7 @@ micros:
     include:
       - dist
     run: "node dist/server.js"
+    public: true
     presets:
       env:
         - name: MONGO_URI
