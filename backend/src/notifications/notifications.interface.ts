@@ -18,9 +18,23 @@ type stockSymbolData = {
   sector_id: number;
 };
 
+type ChukulAuthenticateResponse = {
+  access: string;
+  refresh: string;
+};
+
+type IChukul = {
+  _id: string;
+  key: string;
+  accessToken: string;
+  refreshToken: string;
+};
+
 export {
   INotification,
+  IChukul,
   NotificationType,
   NotificationTypeEnum,
   stockSymbolData,
+  ChukulAuthenticateResponse,
 };

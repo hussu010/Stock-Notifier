@@ -18,11 +18,7 @@ import notificationRouter from './src/notifications/notifications.route';
 import { scanNotificationTriggers } from './src/notifications/notifications.service';
 
 app.enable('trust proxy');
-app.use(
-  cors({
-    origin: '*',
-  })
-);
+app.use(cors());
 app.use(
   morgan(
     // Standard Apache combined log output plus response time

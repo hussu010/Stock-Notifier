@@ -1,5 +1,11 @@
 v: 0
 micros:
+  - name: stock-notifier-fe
+    src: ./frontend
+    engine: next
+    primary: true
+    public: true
+
   - name: stock-notifier-api
     src: ./backend
     engine: nodejs16
@@ -22,8 +28,9 @@ micros:
         - name: DISCORD_WEBHOOK_TOKEN
           description: Discord webhook token
           default: "1234567890"
-  - name: stock-notifier-fe
-    src: ./frontend
-    engine: next
-    primary: true
-    public: true
+        - name: CHUKUL_PHONE_NUMBER
+          description: Chukul phone number for authentication
+          default: "9858585858"
+        - name: CHUKUL_PASSWORD
+          description: Chukul password for authentication
+          default: "our_password"
