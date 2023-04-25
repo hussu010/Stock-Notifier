@@ -31,11 +31,9 @@ app.use(express.json());
 app.post('/__space/v0/actions', async (req, res) => {
   const event = req.body.event;
 
-  // if (event.id === 'scanNotificationTriggers') {
-  //   await scanNotificationTriggers();
-  // }
-
-  await scanNotificationTriggers();
+  if (event.id === 'scanNotificationTriggers') {
+    await scanNotificationTriggers();
+  }
 
   res
     .status(200)

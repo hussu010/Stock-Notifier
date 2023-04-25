@@ -34,3 +34,9 @@ micros:
         - name: CHUKUL_PASSWORD
           description: Chukul password for authentication
           default: "our_password"
+    actions:
+      - id: "scanNotificationTriggers"
+        name: "scanNotificationTriggers"
+        description: "Check if price has met the given levels"
+        trigger: "schedule"
+        default_interval: "0 5 * * *"
