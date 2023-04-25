@@ -1,22 +1,22 @@
 v: 0
 micros:
-  - name: stock-notifier
-    src: .
+  - name: stock-notifier-api
+    src: ./backend
     engine: nodejs16
-    dev: 'npm run dev'
+    dev: "npm run dev"
     commands:
       - npm run build
     include:
       - dist
-    run: 'node dist/server.js'
+    run: "node dist/server.js"
     presets:
       env:
         - name: MONGO_URI
           description: Mongo Uri to connect to mongo database
-          default: 'mongodb://value:value@localhost:27017/stockNotifier?authSource=admin'
+          default: "mongodb://value:value@localhost:27017/stockNotifier?authSource=admin"
         - name: DISCORD_WEBHOOK_ID
           description: Discord webhook id
-          default: '1234567890'
+          default: "1234567890"
         - name: DISCORD_WEBHOOK_TOKEN
           description: Discord webhook token
-          default: '1234567890'
+          default: "1234567890"

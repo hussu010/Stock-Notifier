@@ -15,6 +15,7 @@ import * as swaggerUi from 'swagger-ui-express';
 import * as swaggerDocument from './swagger.json';
 
 import notificationRouter from './src/notifications/notifications.route';
+import { scanNotificationTriggers } from './src/notifications/notifications.service';
 
 app.enable('trust proxy');
 app.use(cors());
@@ -26,6 +27,20 @@ app.use(
   )
 );
 app.use(express.json());
+
+app.post('/__space/v0/actions', async (req, res) => {
+  const event = req.body.event;
+
+  // if (event.id === 'scanNotificationTriggers') {
+  //   await scanNotificationTriggers();
+  // }
+
+  await scanNotificationTriggers();
+
+  res
+    .status(200)
+    .json({ message: 'Scanned notification trigger successfully.' });
+});
 
 app.use('/notifications', notificationRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
