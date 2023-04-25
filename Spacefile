@@ -9,3 +9,14 @@ micros:
     include:
       - dist
     run: 'node dist/server.js'
+    presets:
+      env:
+        - name: MONGO_URI
+          description: Mongo Uri to connect to mongo database
+          default: 'mongodb://value:value@localhost:27017/stockNotifier?authSource=admin'
+        - name: DISCORD_WEBHOOK_ID
+          description: Discord webhook id
+          default: '1234567890'
+        - name: DISCORD_WEBHOOK_TOKEN
+          description: Discord webhook token
+          default: '1234567890'
