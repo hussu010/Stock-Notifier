@@ -10,6 +10,7 @@ micros:
       - dist
     run: "node dist/server.js"
     public: true
+    path: api
     presets:
       env:
         - name: MONGO_URI
@@ -21,3 +22,8 @@ micros:
         - name: DISCORD_WEBHOOK_TOKEN
           description: Discord webhook token
           default: "1234567890"
+  - name: stock-notifier-fe
+    src: ./frontend
+    engine: next
+    primary: true
+    public: true
