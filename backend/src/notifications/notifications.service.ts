@@ -1,4 +1,5 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import axios from 'axios';
 import Notification from './notifications.model';
 import Chukul from './chukul.model';
 import { sendMessageToDiscord } from '../common/utils/discord';
@@ -69,27 +70,26 @@ const hasPriceReachedLevel = (
 
 const getChukulAccessRefreshToken = async () => {
   try {
-    const response = await fetch(`https://chukul.com/api/authenticate/token/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent':
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-        Origin: 'https://chukul.com',
-        Referer: 'https://chukul.com/',
-      },
-      body: JSON.stringify({
+    const { data } = await axios.post(
+      `https://chukul.com/api/authenticate/token/`,
+      {
         phone_number: process.env.CHUKUL_PHONE_NUMBER,
         password: process.env.CHUKUL_PASSWORD,
         device: 'web',
         medium: 'chukul',
-      }),
-    });
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+          Origin: 'https://chukul.com',
+          Referer: 'https://chukul.com/',
+        },
+      }
+    );
 
-    const responseObject =
-      response.json() as Promise<ChukulAuthenticateResponse>;
-
-    const { access, refresh } = await responseObject;
+    const { access, refresh } = data;
 
     await Chukul.findOneAndUpdate(
       {
@@ -146,24 +146,27 @@ const getValidAccessToken = async () => {
 };
 
 const getStockPrice = async (symbol: string) => {
-  const accessToken = await getValidAccessToken();
-  const response = await fetch(
-    `https://chukul.com/api/data/historydata/?symbol=${symbol}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent':
-          'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-        Origin: 'https://chukul.com',
-        Referer: 'https://chukul.com/',
-      },
-    }
-  );
+  try {
+    // const accessToken = await getValidAccessToken();
 
-  const responseObject = await response.json();
-  const latestPrice = responseObject[0].close;
-  return latestPrice;
+    const { data } = await axios.get(
+      `https://chukul.com/api/data/historydata/?symbol=${symbol}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent':
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+          Origin: 'https://chukul.com',
+          Referer: 'https://chukul.com/',
+        },
+      }
+    );
+
+    const latestPrice = data[0].close;
+    return latestPrice;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
 };
 
 export { createNotification, scanNotificationTriggers };

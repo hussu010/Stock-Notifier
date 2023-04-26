@@ -28,16 +28,22 @@ app.use(
 );
 app.use(express.json());
 
-app.post('/__space/v0/actions', async (req, res) => {
-  const event = req.body.event;
+app.post('/__space/v0/actions', async (req, res, next) => {
+  try {
+    const event = req.body.event;
 
-  if (event.id === 'scanNotificationTriggers') {
+    if (event && event.id === 'scanNotificationTriggers') {
+      await scanNotificationTriggers();
+    }
+
     await scanNotificationTriggers();
-  }
 
-  res
-    .status(200)
-    .json({ message: 'Scanned notification trigger successfully.' });
+    res
+      .status(200)
+      .json({ message: 'Scanned notification trigger successfully.' });
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.use('/notifications', notificationRouter);
