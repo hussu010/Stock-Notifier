@@ -36,8 +36,6 @@ app.post('/__space/v0/actions', async (req, res, next) => {
       await scanNotificationTriggers();
     }
 
-    await scanNotificationTriggers();
-
     res
       .status(200)
       .json({ message: 'Scanned notification trigger successfully.' });
