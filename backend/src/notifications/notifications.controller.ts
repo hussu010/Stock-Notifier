@@ -6,7 +6,7 @@ import { createNotification } from './notifications.service';
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const notifications = await Notification.find({}).sort({ createdAt: -1 });
+    const notifications = await Notification.find({}).sort({ symbol: 1 });
     res.status(200).json(notifications);
   } catch (error) {
     next(error);
