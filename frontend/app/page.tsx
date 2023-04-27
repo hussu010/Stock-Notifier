@@ -76,7 +76,7 @@ export default function Home() {
     event.preventDefault();
 
     const requestUrl = isEditing
-      ? `${API_BASE_URI}/${editId}`
+      ? `${API_BASE_URI}/notifications/${editId}`
       : `${API_BASE_URI}/notifications`;
 
     const requestOptions = {
