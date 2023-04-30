@@ -16,14 +16,17 @@ export default function Home() {
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState("");
   const [symbol, setSymbol] = useState("");
-  const [price, setPrice] = useState(0);
-  const [type, setType] = useState("TARGET");
+  const [entry, setEntry] = useState(0);
+  const [target, setTarget] = useState(0);
+  const [stopLoss, setStopLoss] = useState(0);
+  const [exit, setExit] = useState(0);
+  const [status, setStatus] = useState("OPEN");
 
-  const API_BASE_URI = "https://notifier-1-b7933411.deta.app/api";
+  const API_BASE_URI = "/api";
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${API_BASE_URI}/notifications`)
+    fetch(`${API_BASE_URI}/orders`)
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -34,14 +37,20 @@ export default function Home() {
   const handleEdit = (
     editId: string,
     symbol: string,
-    price: number,
-    type: string
+    entry: number,
+    target: number,
+    stopLoss: number,
+    exit: number,
+    status: string
   ) => {
     setIsEditing(true);
     setEditId(editId);
     setSymbol(symbol);
-    setPrice(price);
-    setType(type);
+    setEntry(entry);
+    setTarget(target);
+    setStopLoss(stopLoss);
+    setExit(exit);
+    setStatus(status);
     setShowForm(true);
   };
 
@@ -55,16 +64,16 @@ export default function Home() {
 
     setLoading(true);
 
-    const response = await fetch(`${API_BASE_URI}/notifications/${_id}`, {
+    const response = await fetch(`${API_BASE_URI}/orders/${_id}`, {
       method: "DELETE",
     });
 
     if (!response.ok) {
-      window.alert("Failed to delete the notification");
+      window.alert("Failed to delete the order");
       return;
     }
 
-    fetch(`${API_BASE_URI}/notifications`)
+    fetch(`${API_BASE_URI}/orders`)
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -76,15 +85,15 @@ export default function Home() {
     event.preventDefault();
 
     const requestUrl = isEditing
-      ? `${API_BASE_URI}/notifications/${editId}`
-      : `${API_BASE_URI}/notifications`;
+      ? `${API_BASE_URI}/orders/${editId}`
+      : `${API_BASE_URI}/orders`;
 
     const requestOptions = {
       method: isEditing ? "PATCH" : "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ symbol, price, type }),
+      body: JSON.stringify({ symbol, entry, target, stopLoss, exit, status }),
     };
 
     const response = await fetch(requestUrl, requestOptions);
@@ -94,16 +103,19 @@ export default function Home() {
       return;
     }
 
-    window.alert(`Notification ${response.statusText} successfully`);
+    window.alert(`Order ${response.statusText} successfully`);
 
     setShowForm(false);
     setEditId("");
     setSymbol("");
-    setPrice(0);
-    setType("TARGET");
+    setEntry(0);
+    setTarget(0);
+    setStopLoss(0);
+    setExit(0);
+    setStatus("OPEN");
     setIsEditing(false);
 
-    fetch(`${API_BASE_URI}/notifications`)
+    fetch(`${API_BASE_URI}/orders`)
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -112,14 +124,12 @@ export default function Home() {
   };
 
   if (isLoading) return <p>Loading...</p>;
-  if (!data) return <p>No notification data</p>;
+  if (!data) return <p>No order data</p>;
 
   return (
     <div className="container mx-auto h-screen">
       <div className="w-full">
-        <h1 className="text-3xl font-bold mb-4 text-center py-5">
-          Pending Notifications
-        </h1>
+        <h1 className="text-3xl font-bold mb-4 text-center py-5">Orders</h1>
         <Table
           data={data}
           handleDelete={handleDelete}
@@ -129,7 +139,7 @@ export default function Home() {
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => setShowForm(true)}
         >
-          Create Notification
+          Create Order
         </button>
         {showForm && (
           <form className="mb-4" onSubmit={handleFormSubmit}>
@@ -148,31 +158,71 @@ export default function Home() {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="price" className="block font-bold mb-2">
-                Price
+              <label htmlFor="entry" className="block font-bold mb-2">
+                Entry
               </label>
               <input
                 type="number"
-                id="price"
-                name="price"
+                id="entry"
+                name="entry"
                 className="border rounded w-full py-2 px-3"
-                value={price}
-                onChange={(event) => setPrice(parseInt(event.target.value))}
+                value={entry}
+                onChange={(event) => setEntry(parseInt(event.target.value))}
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="type" className="block font-bold mb-2">
-                Type
+              <label htmlFor="target" className="block font-bold mb-2">
+                Target
+              </label>
+              <input
+                type="number"
+                id="target"
+                name="target"
+                className="border rounded w-full py-2 px-3"
+                value={target}
+                onChange={(event) => setTarget(parseInt(event.target.value))}
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="stopLoss" className="block font-bold mb-2">
+                Stop Loss
+              </label>
+              <input
+                type="number"
+                id="stopLoss"
+                name="Stop Loss"
+                className="border rounded w-full py-2 px-3"
+                value={stopLoss}
+                onChange={(event) => setStopLoss(parseInt(event.target.value))}
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="exit" className="block font-bold mb-2">
+                Exit
+              </label>
+              <input
+                type="number"
+                id="exit"
+                name="exit"
+                className="border rounded w-full py-2 px-3"
+                value={exit}
+                onChange={(event) => setExit(parseInt(event.target.value))}
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="status" className="block font-bold mb-2">
+                Status
               </label>
               <select
-                id="type"
-                name="Type"
+                id="status"
+                name="Status"
                 className="border rounded w-full py-2 px-3"
-                value={type}
-                onChange={(event) => setType(event.target.value)}
+                value={status}
+                onChange={(event) => setStatus(event.target.value)}
               >
-                <option value="TARGET">TARGET</option>
-                <option value="STOP_LOSS">STOP_LOSS</option>
+                <option value="OPEN">Open</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
               </select>
             </div>
             <button
@@ -183,7 +233,17 @@ export default function Home() {
             </button>
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
-              onClick={() => setShowForm(false)}
+              onClick={() => {
+                setShowForm(false);
+                setEditId("");
+                setSymbol("");
+                setEntry(0);
+                setTarget(0);
+                setStopLoss(0);
+                setExit(0);
+                setStatus("OPEN");
+                setIsEditing(false);
+              }}
             >
               Cancel
             </button>
