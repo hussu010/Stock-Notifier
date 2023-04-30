@@ -138,6 +138,135 @@
           }
         }
       }
+    },
+    "/orders/": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/OrderList"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          }
+        }
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/OrderBody"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "order created successfully.",
+            "schema": {
+              "$ref": "#/definitions/OrderResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/BadRequestError"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "patch": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/OrderBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "order updated successfully.",
+            "schema": {
+              "$ref": "#/definitions/OrderResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/BadRequestError"
+            }
+          },
+          "404": {
+            "description": "order not found.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          }
+        }
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "order deleted.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/BadRequestError"
+            }
+          },
+          "404": {
+            "description": "order not found.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -249,6 +378,128 @@
           "type": {
             "type": "string",
             "example": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      }
+    },
+    "OrderBody": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "example": "RSDC"
+        },
+        "entry": {
+          "type": "string",
+          "example": "1200"
+        },
+        "target": {
+          "type": "string",
+          "example": "1200"
+        },
+        "stopLoss": {
+          "type": "string",
+          "example": "1200"
+        },
+        "exit": {
+          "type": "string",
+          "example": "1200"
+        },
+        "status": {
+          "type": "string",
+          "example": "{OPEN | CANCELLED | COMPLETED}"
+        }
+      }
+    },
+    "OrderResponse": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "string"
+        },
+        "symbol": {
+          "type": "string",
+          "example": "RSDC"
+        },
+        "title": {
+          "type": "string",
+          "example": "string"
+        },
+        "entry": {
+          "type": "string",
+          "example": "1200"
+        },
+        "target": {
+          "type": "string",
+          "example": "1200"
+        },
+        "stopLoss": {
+          "type": "string",
+          "example": "1200"
+        },
+        "exit": {
+          "type": "string",
+          "example": "1200"
+        },
+        "status": {
+          "type": "string",
+          "example": "{OPEN | CANCELLED | COMPLETED}"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "string"
+        }
+      }
+    },
+    "OrderList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "symbol": {
+            "type": "string",
+            "example": "RSDC"
+          },
+          "title": {
+            "type": "string",
+            "example": "string"
+          },
+          "entry": {
+            "type": "string",
+            "example": "1200"
+          },
+          "target": {
+            "type": "string",
+            "example": "1200"
+          },
+          "stopLoss": {
+            "type": "string",
+            "example": "1200"
+          },
+          "exit": {
+            "type": "string",
+            "example": "1200"
+          },
+          "status": {
+            "type": "string",
+            "example": "{OPEN | CANCELLED | COMPLETED}"
           },
           "createdAt": {
             "type": "string",
