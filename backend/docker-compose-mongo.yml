@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  db:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: merodera
+      MONGO_INITDB_ROOT_PASSWORD: merodera
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-db:/data/db
+
+volumes:
+  mongo-db:
