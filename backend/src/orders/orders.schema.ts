@@ -16,15 +16,61 @@ const createOrderSchema = [
 
     return true;
   }),
-  body('entry').isNumeric(),
-  body('target').isNumeric(),
-  body('stopLoss').isNumeric(),
+  body('entry')
+    .isNumeric()
+    .custom((value, { req }) => {
+      if (value > req.body.target || value < req.body.stopLoss) {
+        throw new Error('Entry price must be between target and stop loss');
+      }
+      return true;
+    }),
+  body('target')
+    .isNumeric()
+    .custom((value, { req }) => {
+      if (value < req.body.entry || value < req.body.stopLoss) {
+        throw new Error(
+          'Target price must be greater than entry and stop loss'
+        );
+      }
+      return true;
+    }),
+  body('stopLoss')
+    .isNumeric()
+    .custom((value, { req }) => {
+      if (value > req.body.entry || value > req.body.target) {
+        throw new Error('Stop loss price must be less than entry and target');
+      }
+      return true;
+    }),
 ];
 
 const updateOrderSchema = [
-  body('entry').isNumeric(),
-  body('target').isNumeric(),
-  body('stopLoss').isNumeric(),
+  body('entry')
+    .isNumeric()
+    .custom((value, { req }) => {
+      if (value > req.body.target || value < req.body.stopLoss) {
+        throw new Error('Entry price must be between target and stop loss');
+      }
+      return true;
+    }),
+  body('target')
+    .isNumeric()
+    .custom((value, { req }) => {
+      if (value < req.body.entry || value < req.body.stopLoss) {
+        throw new Error(
+          'Target price must be greater than entry and stop loss'
+        );
+      }
+      return true;
+    }),
+  body('stopLoss')
+    .isNumeric()
+    .custom((value, { req }) => {
+      if (value > req.body.entry || value > req.body.target) {
+        throw new Error('Stop loss price must be less than entry and target');
+      }
+      return true;
+    }),
   body('exit').isNumeric(),
   body('status')
     .isIn(OrderStatusEnum)
