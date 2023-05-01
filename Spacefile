@@ -3,6 +3,7 @@ micros:
   - name: stock-notifier-fe
     src: ./frontend
     engine: next
+    dev: "npm run dev"
     primary: true
     public: true
 
@@ -14,6 +15,7 @@ micros:
       - npm run build
     include:
       - dist
+      - node_modules
     run: "node dist/server.js"
     public: true
     path: api
