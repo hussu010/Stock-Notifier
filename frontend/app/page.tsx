@@ -99,7 +99,7 @@ export default function Home() {
     const response = await fetch(requestUrl, requestOptions);
 
     if (!response.ok) {
-      window.alert(`Failed to create notification. Status ${response.status}`);
+      window.alert(`Failed to create order. Status ${response.status}`);
       return;
     }
 
