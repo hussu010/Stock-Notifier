@@ -1,6 +1,6 @@
 import axios from 'axios';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import Chukul from '../../notifications/chukul.model';
+import Chukul from '../../orders/chukul.model';
 
 type stockSymbolData = {
   id: number;

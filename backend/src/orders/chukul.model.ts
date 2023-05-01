@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { IChukul } from './notifications.interface';
+import { IChukul } from './orders.interface';
 
 const chukulSchema = new mongoose.Schema<IChukul>(
   {

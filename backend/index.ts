@@ -14,7 +14,6 @@ import { stream } from './src/common/config/winston';
 import * as swaggerUi from 'swagger-ui-express';
 import * as swaggerDocument from './swagger.json';
 
-import notificationRouter from './src/notifications/notifications.route';
 import orderRouter from './src/orders/orders.route';
 import { scanNotificationTriggers } from './src/common/utils/notification';
 
@@ -45,7 +44,6 @@ app.post('/__space/v0/actions', async (req, res, next) => {
   }
 });
 
-app.use('/notifications', notificationRouter);
 app.use('/orders', orderRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

@@ -13,4 +13,11 @@ interface IOrder extends Document {
 type OrderStatus = 'OPEN' | 'CANCELLED' | 'COMPLETED';
 const OrderStatusEnum = ['OPEN', 'COMPLETED', 'CANCELLED'];
 
-export { IOrder, OrderStatus, OrderStatusEnum };
+type IChukul = {
+  _id: string;
+  key: string;
+  accessToken: string;
+  refreshToken: string;
+};
+
+export { IOrder, OrderStatus, OrderStatusEnum, IChukul };
