@@ -6,7 +6,9 @@ import { createOrder } from './orders.service';
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const orders = await Order.find({ isDeleted: false }).sort({ symbol: 1 });
+    const orders = await Order.find({ isDeleted: false, status: 'OPEN' }).sort({
+      symbol: 1,
+    });
     res.status(200).json(orders);
   } catch (error) {
     next(error);
