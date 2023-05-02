@@ -4,7 +4,7 @@ import { sendMessageToDiscord } from './discord';
 
 const scanNotificationTriggers = async () => {
   try {
-    const orders = await Order.find({ isDeleted: false });
+    const orders = await Order.find({ isDeleted: false, status: 'OPEN' });
     for (let i = 0; i < orders.length; i++) {
       var order = orders[i];
       const currentStockPrice = await getStockPrice(order.symbol);
