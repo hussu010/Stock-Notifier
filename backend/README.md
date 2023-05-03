@@ -2,7 +2,7 @@
 
 Install all the required dependencies using `npm i`.
 
-Copy the contents of `.env.example` file to `.env` and update the environment variables.
+Copy the contents of `.env.template` file to `.env` and update the environment variables.
 
 To run mongodb using docker, use
 
