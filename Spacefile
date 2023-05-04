@@ -1,14 +1,14 @@
 v: 0
 micros:
   - name: stock-notifier-fe
-    src: ./frontend
+    src: frontend
     engine: next
     dev: "npm run dev"
     primary: true
     public: true
 
   - name: stock-notifier-api
-    src: ./backend
+    src: backend
     engine: nodejs16
     dev: "npm run dev"
     commands:
@@ -41,4 +41,4 @@ micros:
         name: "scanNotificationTriggers"
         description: "Check if price has met the given levels"
         trigger: "schedule"
-        default_interval: "0 5 * * *"
+        default_interval: "0 */8 * * *"
