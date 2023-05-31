@@ -46,7 +46,7 @@ app.post('/__space/v0/actions', async (req, res, next) => {
 });
 
 app.use('/orders', orderRouter);
-app.use('/alert', alertRouter);
+app.use('/alerts', alertRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(errorLogger);
