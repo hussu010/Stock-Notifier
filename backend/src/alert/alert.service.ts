@@ -1,36 +1,27 @@
-import {Request} from 'express';
+import { Request } from 'express';
 
-import Alert from "./alert.model";
+import Alert from './alert.model';
 
-const createAlert = async(
-    
-    symbol: string,
-    title: string,
-    price: number,
-    target: number,
-    alertname: string,
-    notes: string,
-    expiresAt: number
+const createAlert = async (
+  symbol: string,
+  title: string,
+  price: number,
+  target: number,
+  alertName: string,
+  notes: string,
+  expiresAt: number
+) => {
+  const alert = new Alert({
+    symbol,
+    title,
+    price,
+    target,
+    alertName,
+    notes,
+    expiresAt,
+  });
 
-)=> {
-      
-        
-        const alert = new Alert({
-            symbol,
-            title,
-            price,
-            target,
-            alertname,
-            notes,
-            expiresAt ,
-
-       });
-
-        return await alert.save();
-
-    
-
-       
+  return await alert.save();
 };
 
-export{createAlert};
+export { createAlert };
