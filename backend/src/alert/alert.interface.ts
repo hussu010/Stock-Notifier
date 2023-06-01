@@ -7,6 +7,7 @@ interface IAlert extends Document {
   alertName: string;
   notes: string;
   expiresAt: number;
+  isDeleted: boolean;
 }
 
 export { IAlert };
