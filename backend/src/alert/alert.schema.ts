@@ -83,4 +83,10 @@ const updatealertSchema = [
   }),
 ];
 
-export { createalertSchema, updatealertSchema };
+const deletealertSchema = [
+  param('id', errorMessages.INVALID_OBJECT_ID).custom((value) => {
+    return mongoose.Types.ObjectId.isValid(value);
+  }),
+];
+
+export { createalertSchema, updatealertSchema, deletealertSchema };
