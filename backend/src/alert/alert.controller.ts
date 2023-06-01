@@ -23,8 +23,7 @@ const create = async (
       expiresAt
     );
 
-    res.status(201);
-    res.json(alert);
+    res.status(201).json(alert);
   } catch (error) {
     next(error);
   }
