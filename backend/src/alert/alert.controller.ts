@@ -4,6 +4,8 @@ import Alert from './alert.model';
 import { createAlert } from './alert.service';
 import { errorMessages } from '../common/config/messages';
 
+
+// create alert
 const create = async (
   req: Request,
   res: Response,
@@ -29,6 +31,17 @@ const create = async (
   }
 };
 
+// get all alerts
+const getAll = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const alerts = await Alert.find();
+    res.status(200).json(alerts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// update alert by id
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { symbol, title, price, alertName, notes, expiresAt } = req.body;
@@ -55,4 +68,23 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { create, update };
+// Delete alert by id
+const remove = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const alert = await Alert.findById(req.params.id);
+    if (!alert) {
+      throw new Error(errorMessages.OBJECT_WITH_ID_NOT_FOUND);
+    }
+
+    await alert.deleteOne();
+
+    res.status(200).json({ message: 'Alert deleted successfully' });
+  } catch (error: any) {
+    if (error.message === errorMessages.OBJECT_WITH_ID_NOT_FOUND) {
+      return res.status(404).json({ message: error.message });
+    }
+    next(error);
+  }
+};
+
+export { create, getAll, update, remove };
