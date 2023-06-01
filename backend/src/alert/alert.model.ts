@@ -10,6 +10,7 @@ const alertSchema = new mongoose.Schema<IAlert>(
     alertName: { type: String, required: true },
     notes: { type: String, required: true },
     expiresAt: { type: Number, required: true },
+    
   },
   {
     timestamps: true,
