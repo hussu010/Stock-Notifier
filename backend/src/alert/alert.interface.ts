@@ -4,10 +4,10 @@ interface IAlert extends Document {
   title: string;
   price: number;
   target: number;
+  type: number;
   alertName: string;
   notes: string;
-  expiresAt: number;
-  isDeleted: boolean;
+  expiresAt: Date;
 }
 
 export { IAlert };
