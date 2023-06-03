@@ -4,13 +4,8 @@ import Alert from './alert.model';
 import { createAlert } from './alert.service';
 import { errorMessages } from '../common/config/messages';
 
-
 // create alert
-const create = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { symbol, title, price, target, alertName, notes, expiresAt } =
       req.body;
