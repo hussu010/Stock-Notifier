@@ -72,13 +72,18 @@ const updatealertSchema = [
       return true;
     }),
   body('expiresAt').custom((value, { req }) => {
-    if (value <= 0 || value > 365) {
-      throw new Error('The expire time should be between 1 to 365 days');
+    //Regex to check date format
+    var date_regex = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+    if (!date_regex.test(value)) {
+      throw new Error('The expire date format is not matched "YYYY-MM-DD".');
     }
+    // if (value <= 0 || value > 365) {
+    //   throw new Error('The expire time should be between 1 to 365 days');
+    // }
 
     return true;
   }),
-  param('id', errorMessages.INVALID_OBJECT_ID).custom((value)=>{
+  param('id', errorMessages.INVALID_OBJECT_ID).custom((value) => {
     return mongoose.Types.ObjectId.isValid(value);
   }),
 ];
