@@ -1,22 +1,18 @@
-import { Request } from 'express';
-
-import Alert from './alert.model';
+import Alert from './alerts.model';
 
 const createAlert = async (
   symbol: string,
   title: string,
-  price: number,
   target: number,
-  alertName: string,
+  type: string,
   notes: string,
   expiresAt: number
 ) => {
   const alert = new Alert({
     symbol,
     title,
-    price,
     target,
-    alertName,
+    type,
     notes,
     expiresAt,
   });

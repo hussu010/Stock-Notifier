@@ -1,21 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 
-import Alert from './alert.model';
-import { createAlert } from './alert.service';
+import Alert from './alerts.model';
+import { createAlert } from './alerts.service';
 import { errorMessages } from '../common/config/messages';
 
-// create alert
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { symbol, title, price, target, alertName, notes, expiresAt } =
-      req.body;
+    const { symbol, title, target, type, notes, expiresAt } = req.body;
 
     const alert = await createAlert(
       symbol,
       title,
-      price,
       target,
-      alertName,
+      type,
       notes,
       expiresAt
     );
@@ -26,7 +23,6 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// get all alerts
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const alerts = await Alert.find();
@@ -36,10 +32,9 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// update alert by id
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { symbol, title, price, alertName, notes, expiresAt } = req.body;
+    const { symbol, title, notes, expiresAt } = req.body;
 
     const update = await Alert.findById(req.params.id);
     if (!update) {
@@ -48,8 +43,6 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
 
     update.symbol = symbol;
     update.title = title;
-    update.price = price;
-    update.alertName = alertName;
     update.notes = notes;
     update.expiresAt = expiresAt;
     await update.save();
@@ -63,7 +56,6 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// Delete alert by id
 const remove = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const alert = await Alert.findById(req.params.id);

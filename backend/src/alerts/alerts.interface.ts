@@ -2,12 +2,12 @@ interface IAlert extends Document {
   _id: string;
   symbol: string;
   title: string;
-  price: number;
   target: number;
-  type: number;
-  alertName: string;
+  type: string;
   notes: string;
   expiresAt: Date;
 }
 
-export { IAlert };
+const alertTypeEnum = ['GREATER_THAN', 'LESS_THAN'];
+
+export { IAlert, alertTypeEnum };
