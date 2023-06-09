@@ -3,11 +3,10 @@ interface IAlert extends Document {
   symbol: string;
   title: string;
   target: number;
-  type: AlertType;
+  type: String;
   notes: string;
   expiresAt: Date;
 }
 
-type AlertType = 'GREATER_THAN' | 'LESS_THAN';
 const AlertTypeEnum = ['GREATER_THAN', 'LESS_THAN'];
-export { IAlert, AlertType,AlertTypeEnum };
+export { IAlert, AlertTypeEnum };
