@@ -41,8 +41,9 @@ app.post('/__space/v0/actions', async (req, res, next) => {
       (event && event.id === 'NotificationTriggers')
     ) {
       await scanNotificationTriggers();
-      await NotificationTriggers();
+      
     }
+    await NotificationTriggers();
 
     res
       .status(200)
