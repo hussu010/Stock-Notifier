@@ -7,14 +7,14 @@ import { errorMessages } from '../common/config/messages';
 // create alert
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { symbol, title, price, target, alertName, notes, expiresAt } =
+    const { symbol, title, target, type, alertName, notes, expiresAt } =
       req.body;
-
+    
     const alert = await createAlert(
       symbol,
       title,
-      price,
       target,
+      type,
       alertName,
       notes,
       expiresAt
@@ -39,7 +39,7 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
 // update alert by id
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { symbol, title, price, alertName, notes, expiresAt } = req.body;
+    const { symbol, title, alertName, notes, expiresAt } = req.body;
 
     const update = await Alert.findById(req.params.id);
     if (!update) {
@@ -48,7 +48,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
 
     update.symbol = symbol;
     update.title = title;
-    update.price = price;
+    
     update.alertName = alertName;
     update.notes = notes;
     update.expiresAt = expiresAt;

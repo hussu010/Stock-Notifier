@@ -9,9 +9,8 @@ const alertSchema = new mongoose.Schema<IAlert>(
   {
     symbol: { type: String, required: true },
     title: { type: String, required: true },
-    price: { type: Number, required: true },
     target: { type: Number, required: true },
-    type: {type: Number, required: true},
+    type: {type: String, required: true, default: 'Greater'},
     alertName: { type: String, required: true },
     notes: { type: String, required: true },
     expiresAt: { type: Date, required: true, default: aYearFromNow },
