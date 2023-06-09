@@ -51,8 +51,6 @@ const checkNotificationTriggered = (
   return { notificationTriggered: false, notificationType: '' };
 };
 
-
-
 //For sending the notification of user created notes as alert
 const NotificationTriggers = async () => {
   try {
@@ -60,15 +58,14 @@ const NotificationTriggers = async () => {
     for (let i = 0; i < alerts.length; i++) {
       var alert = alerts[i];
       const currentStockPrice = await getStockPrice(alert.symbol);
-      const alerType = alert.type;
-      console.log(alerType);
-      // if the user select the GREATER_THAN option, when the price will cross the target and becomes greater than the system will use this message
-      if (alerType === 'GREATER_THAN') {
-        const { notificationTriggered, notificationType } =
-          checkNotificationGreater(currentStockPrice, alert.target);
+      const { notificationTriggered, notificationType } = isAlertTriggered(
+        alert.type,
+        currentStockPrice,
+        alert.target
+      );
 
-        if (notificationTriggered) {
-          const notificationMessage = `
+      if (notificationTriggered) {
+        const notificationMessage = `
           Symbol:  ${alert.symbol}\n
           Title: ${alert.title}\n
           Current Price: Rs. ${currentStockPrice}\n
@@ -76,31 +73,10 @@ const NotificationTriggers = async () => {
           Notes: ${alert.notes}\n
           Expire At: ${alert.expiresAt}`;
 
-          sendMessageToDiscord(
-            `${notificationType} alert for ${alert.symbol}`,
-            notificationMessage
-          );
-        }
-      }
-      // if the user select the LESSER_THAN option, when the price will below the target and becomes lesser than the system will use this message
-      else if (alerType === 'LESS_THAN') {
-        const { notificationTriggered, notificationType } =
-          checkNotificationLesser(currentStockPrice, alert.target);
-
-        if (notificationTriggered) {
-          const notificationMessage = `
-        Symbol:  ${alert.symbol}\n
-        Title: ${alert.title}\n
-        Current Price: Rs. ${currentStockPrice}\n
-        Target: Rs. ${alert.target}\n
-        Notes: ${alert.notes}\n
-        Expire At: ${alert.expiresAt}`;
-
-          sendMessageToDiscord(
-            `${notificationType} alert for ${alert.symbol}`,
-            notificationMessage
-          );
-        }
+        sendMessageToDiscord(
+          `${notificationType} alert for ${alert.symbol}`,
+          notificationMessage
+        );
       }
     }
   } catch (error: any) {
@@ -108,19 +84,28 @@ const NotificationTriggers = async () => {
   }
 };
 
-//if the target price will become greater than current price
-const checkNotificationGreater = (current: number, target: number) => {
-  if (current > target) {
-    return { notificationTriggered: true, notificationType: 'INCREASED TARGET PRICE' };
-  } 
+const isAlertTriggered = (type: String, current: number, target: number) => {
+  // if the user select the GREATER_THAN option, when the price will cross the target and becomes greater than the system will use this message
+  if (type === 'GREATER_THAN') {
+    //if the target price will become greater than current price
+    if (current > target) {
+      return {
+        notificationTriggered: true,
+        notificationType: 'INCREASED TARGET PRICE',
+      };
+    }
+    // if the user select the LESSER_THAN option, when the price will below the target and becomes lesser than the system will use this message
+  } else if (type === 'LESSER_THAN') {
+    //if the target price will below than current price
+    if (current < target) {
+      return {
+        notificationTriggered: true,
+        notificationType: 'DECREASED TARGET PRICE',
+      };
+    }
+  }
+
   return { notificationTriggered: false, notificationType: '' };
 };
 
-//if the target price will below than current price
-const checkNotificationLesser = (current: number, target: number) => {
-  if (current < target) {
-    return { notificationTriggered: true, notificationType: 'DECREASED TARGET PRICE' };
-  } 
-  return { notificationTriggered: false, notificationType: '' };
-};
 export { scanNotificationTriggers, NotificationTriggers };
