@@ -3,6 +3,7 @@ import { body, param } from 'express-validator';
 import { binarySearchStockArray } from '../common/utils/stock';
 import { stockSymbolData } from '../common/config/constants';
 import { errorMessages } from '../common/config/messages';
+import { AlertTypeEnum } from './alerts.interface';
 
 const createalertSchema = [
   body('symbol').custom((value, { req }) => {
@@ -15,22 +16,13 @@ const createalertSchema = [
 
     return true;
   }),
-
-  body('target')
-    .isNumeric()
-    .custom((value, { req }) => {
-      if (value < req.body.price) {
-        throw new Error('The target value should be greater than price.');
-      }
-      return true;
-    }),
-  body('expiresAt').custom((value, { req }) => {
-    if (value <= 0 || value > 365) {
-      throw new Error('The expire time should be between 1 to 365 days');
-    }
-
-    return true;
-  }),
+  body('target').isNumeric(),
+  body('type')
+    .isIn(AlertTypeEnum)
+    .withMessage(
+      `Invalid alert type. Valid values are: ${AlertTypeEnum.join(', ')}`
+    ),
+  body('expiresAt').isDate(),
 ];
 
 const updatealertSchema = [
@@ -44,19 +36,13 @@ const updatealertSchema = [
 
     return true;
   }),
-
-  body('target')
-    .isNumeric()
-    .custom((value, { req }) => {
-      if (value < req.body.price) {
-        throw new Error('The target value should be greater than price.');
-      }
-      return true;
-    }),
-  body('expiresAt', 'The date format is not matched.').matches(
-    /^\d{4}-\d{2}-\d{2}$/
-  ),
-
+  body('target').isNumeric(),
+  body('type')
+    .isIn(AlertTypeEnum)
+    .withMessage(
+      `Invalid alert type. Valid values are: ${AlertTypeEnum.join(', ')}`
+    ),
+  body('expiresAt').isDate(),
   param('id', errorMessages.INVALID_OBJECT_ID).custom((value) => {
     return mongoose.Types.ObjectId.isValid(value);
   }),

@@ -15,7 +15,7 @@ import * as swaggerUi from 'swagger-ui-express';
 import * as swaggerDocument from './swagger.json';
 
 import orderRouter from './src/orders/orders.route';
-import alertRouter from './src/alert/alert.route';
+import alertRouter from './src/alerts/alerts.route';
 import { scanNotificationTriggers } from './src/common/utils/notification';
 
 app.enable('trust proxy');
