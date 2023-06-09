@@ -42,3 +42,9 @@ micros:
         description: "Check if price has met the given levels"
         trigger: "schedule"
         default_interval: "0 */8 * * *"
+        # for the Alert system as note
+        - id: "NotificationTriggers"
+        name: "NotificationTriggers"
+        description: "Check if price has above or below the target"
+        trigger: "schedule"
+        default_interval: "0 */8 * * *"
