@@ -66,7 +66,6 @@ const NotificationTriggers = async () => {
 
       if (notificationTriggered) {
         const notificationMessage = `
-          Symbol:  ${alert.symbol}\n
           Title: ${alert.title}\n
           Current Price: Rs. ${currentStockPrice}\n
           Target: Rs. ${alert.target}\n
@@ -91,7 +90,7 @@ const isAlertTriggered = (type: String, current: number, target: number) => {
     if (current > target) {
       return {
         notificationTriggered: true,
-        notificationType: 'INCREASED TARGET PRICE',
+        notificationType: 'Greater than',
       };
     }
     // if the user select the LESSER_THAN option, when the price will below the target and becomes lesser than the system will use this message
@@ -100,7 +99,7 @@ const isAlertTriggered = (type: String, current: number, target: number) => {
     if (current < target) {
       return {
         notificationTriggered: true,
-        notificationType: 'DECREASED TARGET PRICE',
+        notificationType: 'Less than',
       };
     }
   }
