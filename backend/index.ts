@@ -41,7 +41,6 @@ app.post('/__space/v0/actions', async (req, res, next) => {
     } else if (event && event.id === 'AlertNotificationTriggers') {
       await scanAlertTriggers();
     }
-    await scanAlertTriggers();
 
     res
       .status(200)
