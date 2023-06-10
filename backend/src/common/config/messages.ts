@@ -19,6 +19,7 @@ const errorMessages = {
   USER_PROFILE_NOT_FOUND: 'User profile not found.',
   OBJECT_ALREADY_EXISTS: 'Object already exists.',
   USERNAME_UNAVAILABLE: 'Username is already taken.',
+  DATA_NOT_FOUND: 'Price Unaviable.',
 };
 
 export { successMessages, errorMessages };
