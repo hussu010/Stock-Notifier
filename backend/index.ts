@@ -18,7 +18,7 @@ import orderRouter from './src/orders/orders.route';
 import alertRouter from './src/alerts/alerts.route';
 import {
   scanNotificationTriggers,
-  NotificationTriggers,
+  scanAlertTriggers,
 } from './src/common/utils/notification';
 
 app.enable('trust proxy');
@@ -36,14 +36,12 @@ app.post('/__space/v0/actions', async (req, res, next) => {
   try {
     const event = req.body.event;
 
-    if (
-      (event && event.id === 'scanNotificationTriggers') ||
-      (event && event.id === 'NotificationTriggers')
-    ) {
+    if (event && event.id === 'scanNotificationTriggers') {
       await scanNotificationTriggers();
-      
+    } else if (event && event.id === 'AlertNotificationTriggers') {
+      await scanAlertTriggers();
     }
-    await NotificationTriggers();
+    await scanAlertTriggers();
 
     res
       .status(200)

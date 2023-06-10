@@ -52,7 +52,7 @@ const checkNotificationTriggered = (
 };
 
 //For sending the notification of user created notes as alert
-const NotificationTriggers = async () => {
+const scanAlertTriggers = async () => {
   try {
     const alerts = await Alert.find();
     for (let i = 0; i < alerts.length; i++) {
@@ -107,4 +107,4 @@ const isAlertTriggered = (type: String, current: number, target: number) => {
   return { notificationTriggered: false, notificationType: '' };
 };
 
-export { scanNotificationTriggers, NotificationTriggers };
+export { scanNotificationTriggers, scanAlertTriggers };
