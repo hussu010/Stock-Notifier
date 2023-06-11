@@ -20,7 +20,7 @@ import {
   scanNotificationTriggers,
   scanAlertTriggers,
 } from './src/common/utils/notification';
-
+app.use(errorLogger);
 app.enable('trust proxy');
 app.use(cors());
 app.use(
@@ -41,6 +41,7 @@ app.post('/__space/v0/actions', async (req, res, next) => {
     } else if (event && event.id === 'AlertNotificationTriggers') {
       await scanAlertTriggers();
     }
+    await scanAlertTriggers();
 
     res
       .status(200)
@@ -54,7 +55,6 @@ app.use('/orders', orderRouter);
 app.use('/alerts', alertRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use(errorLogger);
 app.use(errorResponder);
 
 export default app;
