@@ -4,8 +4,6 @@ import { binarySearchStockArray } from '../common/utils/stock';
 import { stockSymbolData } from '../common/config/constants';
 import { errorMessages } from '../common/config/messages';
 import { AlertTypeEnum } from './alerts.interface';
-import { getStockPrice } from '../common/utils/stock';
-import express from 'express';
 
 const createalertSchema = [
   body('symbol').custom((value, { req }) => {
@@ -13,16 +11,10 @@ const createalertSchema = [
 
     if (id === 0) {
       throw new Error('Invalid stock symbol');
-    } else {
-      const currentStockPrice = getStockPrice(value);
-      if (currentStockPrice !== undefined) {
-        console.log('I have got the Error.');
-        req.body.title = name;
-        return true;
-      } else {
-        throw new Error('Internal Server Error');
-      }
     }
+
+    req.body.title = name;
+    return true;
   }),
   body('target').isNumeric(),
   body('type')

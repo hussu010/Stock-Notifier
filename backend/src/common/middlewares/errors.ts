@@ -14,11 +14,8 @@ const errorLogger: ErrorRequestHandler = (err, req, res, next) => {
 
 const errorResponder: ErrorRequestHandler = (err, req, res, next) => {
   const status = err.status || 500;
-  // Send the error response
-  res.status(status).json({ message: err.message });
 
-  // Continue to the next middleware or router handler
-  next();
+  res.status(status).json({ message: err.message });
 };
 
 export { errorLogger, errorResponder };

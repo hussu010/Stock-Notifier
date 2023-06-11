@@ -138,9 +138,9 @@ const getStockPrice = async (symbol: string) => {
     );
     const data = response.data;
     const latestPrice = data[0].close;
-    return latestPrice;
+    return { success: true, latestPrice };
   } catch (error: any) {
-    return response.status(500).json({ error: 'Internal Server Error' });
+    return { success: false, latestPrice: 0 };
   }
 };
 

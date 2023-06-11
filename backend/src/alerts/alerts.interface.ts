@@ -6,7 +6,9 @@ interface IAlert extends Document {
   type: String;
   notes: string;
   expiresAt: Date;
+  status: String;
 }
 
 const AlertTypeEnum = ['GREATER_THAN', 'LESS_THAN'];
-export { IAlert, AlertTypeEnum };
+const AlertStatusEnum = ['OPEN', 'EXPIRED'];
+export { IAlert, AlertTypeEnum, AlertStatusEnum };
