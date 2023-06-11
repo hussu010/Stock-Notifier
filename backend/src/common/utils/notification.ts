@@ -3,6 +3,7 @@ import Alert from '../../alerts/alerts.model';
 import { getStockPrice } from './stock';
 import { sendMessageToDiscord } from './discord';
 import { errorMessages } from '../config/messages';
+
 import { error } from 'console';
 
 const scanNotificationTriggers = async () => {
@@ -58,34 +59,31 @@ const scanAlertTriggers = async () => {
     const alerts = await Alert.find();
     for (let i = 0; i < alerts.length; i++) {
       var alert = alerts[i];
-      try {
-        const currentStockPrice = await getStockPrice(alert.symbol);
 
-        const { notificationTriggered, notificationType } = isAlertTriggered(
-          alert.type,
-          currentStockPrice,
-          alert.target
-        );
+      const currentStockPrice = await getStockPrice(alert.symbol);
 
-        if (notificationTriggered) {
-          const notificationMessage = `
+      const { notificationTriggered, notificationType } = isAlertTriggered(
+        alert.type,
+        currentStockPrice,
+        alert.target
+      );
+
+      if (notificationTriggered) {
+        const notificationMessage = `
               Title: ${alert.title}\n
               Current Price: Rs. ${currentStockPrice}\n
               Target: Rs. ${alert.target}\n
               Notes: ${alert.notes}\n
               Expire At: ${alert.expiresAt}`;
 
-          sendMessageToDiscord(
-            `${notificationType} alert for ${alert.symbol}`,
-            notificationMessage
-          );
-        }
-      } catch (error: any) {
-        throw new Error(errorMessages.DATA_NOT_FOUND);
+        sendMessageToDiscord(
+          `${notificationType} alert for ${alert.symbol}`,
+          notificationMessage
+        );
       }
     }
   } catch (error: any) {
-    throw new Error(error.message);
+    throw new Error(errorMessages.DATA_NOT_FOUND);
   }
 };
 
