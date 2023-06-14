@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import Alert from './alerts.model';
 import { createAlert } from './alerts.service';
-import { errorMessages } from '../common/config/messages';
+import { errorMessages, successMessages } from '../common/config/messages';
 
 // create alert
 const create = async (req: Request, res: Response, next: NextFunction) => {
@@ -71,7 +71,9 @@ const remove = async (req: Request, res: Response, next: NextFunction) => {
 
     await alert.deleteOne();
 
-    res.status(200).json({ message: 'Alert deleted successfully' });
+    res
+      .status(200)
+      .json({ message: successMessages.ALERT_DELETE_SUCCESSFULLY });
   } catch (error: any) {
     if (error.message === errorMessages.OBJECT_WITH_ID_NOT_FOUND) {
       return res.status(404).json({ message: error.message });
