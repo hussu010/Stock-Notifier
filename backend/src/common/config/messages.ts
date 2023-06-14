@@ -1,5 +1,6 @@
 const successMessages = {
   OTP_SENT_SUCCESSFULLY: 'OTP has been successfully sent to your phone number.',
+  ALERT_DELETE_SUCCESSFULLY: 'Alert has been deleted successfully.',
 };
 
 const errorMessages = {
