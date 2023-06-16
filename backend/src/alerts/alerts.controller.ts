@@ -39,20 +39,20 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { symbol, title, target, type, notes, expiresAt } = req.body;
 
-    const update = await Alert.findById(req.params.id);
-    if (!update) {
+    const alert = await Alert.findById(req.params.id);
+    if (!alert) {
       throw new Error(errorMessages.OBJECT_WITH_ID_NOT_FOUND);
     }
 
-    update.symbol = symbol;
-    update.title = title;
-    update.target = target;
-    update.type = type;
-    update.notes = notes;
-    update.expiresAt = expiresAt;
-    await update.save();
+    alert.symbol = symbol;
+    alert.title = title;
+    alert.target = target;
+    alert.type = type;
+    alert.notes = notes;
+    alert.expiresAt = expiresAt;
+    await alert.save();
 
-    res.status(200).json(update);
+    res.status(200).json(alert);
   } catch (error: any) {
     if (error.message === errorMessages.OBJECT_WITH_ID_NOT_FOUND) {
       return res.status(404).json({ message: error.message });
