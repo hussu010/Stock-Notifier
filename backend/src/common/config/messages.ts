@@ -1,5 +1,6 @@
 const successMessages = {
   OTP_SENT_SUCCESSFULLY: 'OTP has been successfully sent to your phone number.',
+  ALERT_DELETE_SUCCESSFULLY: 'Alert has been deleted successfully.',
 };
 
 const errorMessages = {
@@ -19,6 +20,7 @@ const errorMessages = {
   USER_PROFILE_NOT_FOUND: 'User profile not found.',
   OBJECT_ALREADY_EXISTS: 'Object already exists.',
   USERNAME_UNAVAILABLE: 'Username is already taken.',
+  DATA_NOT_FOUND: 'Internal Server Error.',
 };
 
 export { successMessages, errorMessages };

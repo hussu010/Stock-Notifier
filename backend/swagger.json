@@ -144,6 +144,135 @@
           }
         }
       }
+    },
+    "/alerts/": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AlertList"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          }
+        }
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AlertBody"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "alert created succefully.",
+            "schema": {
+              "$ref": "#/definitions/AlertResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/BadRequestError"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          }
+        }
+      }
+    },
+    "/alerts/{id}": {
+      "patch": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AlertBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "alert updated successfully.",
+            "schema": {
+              "$ref": "#/definitions/AlertResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/BadRequestError"
+            }
+          },
+          "404": {
+            "description": "alert not found.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          }
+        }
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "alert deleted.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            },
+            "400": {
+              "description": "Bad request.",
+              "schema": {
+                "$ref": "#/definitions/BadRequestError"
+              }
+            },
+            "404": {
+              "description": "alert not found.",
+              "schema": {
+                "$ref": "#/definitions/SingleMessage"
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "schema": {
+                "$ref": "#/definitions/SingleMessage"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -291,6 +420,136 @@
           "status": {
             "type": "string",
             "example": "{OPEN | CANCELLED | COMPLETED}"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      }
+    },
+    "AlertBody": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "example": "ADBL"
+        },
+        "title": {
+          "type": "string",
+          "example": ""
+        },
+        "target": {
+          "type": "number",
+          "example": 220
+        },
+        "type": {
+          "type": "string",
+          "example": "{GREATER_THAN | LESSER_THAN}"
+        },
+        "notes": {
+          "type": "string",
+          "example": "Price Increased."
+        },
+        "expireAt": {
+          "type": "Date",
+          "example": "string"
+        },
+        "status": {
+          "type": "string",
+          "example": "{OPEN | EXPIRED}"
+        }
+      }
+    },
+    "AlertResponse": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "symbol": {
+            "type": "string",
+            "example": "ADBL"
+          },
+          "title": {
+            "type": "string",
+            "example": "Agriculture Development Bank Limited"
+          },
+          "target": {
+            "type": "number",
+            "example": 220
+          },
+          "type": {
+            "type": "string",
+            "example": "{GREATER_THAN | LESSER_THAN}"
+          },
+          "notes": {
+            "type": "string",
+            "example": "Price Increased."
+          },
+          "expireAt": {
+            "type": "Date",
+            "example": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "{OPEN | EXPIRED}"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      }
+    },
+
+    "AlertList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "string"
+          },
+          "symbol": {
+            "type": "string",
+            "example": "ADBL"
+          },
+          "title": {
+            "type": "string",
+            "example": "Agriculture Development Bank Limited"
+          },
+          "target": {
+            "type": "number",
+            "example": 220
+          },
+          "type": {
+            "type": "string",
+            "example": "{GREATER_THAN | LESSER_THAN}"
+          },
+          "notes": {
+            "type": "string",
+            "example": "Price Increased."
+          },
+          "expireAt": {
+            "type": "Date",
+            "example": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "{OPEN | EXPIRED}"
           },
           "createdAt": {
             "type": "string",
