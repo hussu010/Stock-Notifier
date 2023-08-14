@@ -151,7 +151,7 @@ export default function Home() {
                 type="text"
                 id="title"
                 name="title"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={symbol}
                 disabled={isEditing}
                 onChange={(event) => setSymbol(event.target.value)}
@@ -165,7 +165,7 @@ export default function Home() {
                 type="number"
                 id="entry"
                 name="entry"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={entry}
                 onChange={(event) => setEntry(parseInt(event.target.value))}
               />
@@ -178,7 +178,7 @@ export default function Home() {
                 type="number"
                 id="target"
                 name="target"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={target}
                 onChange={(event) => setTarget(parseInt(event.target.value))}
               />
@@ -191,7 +191,7 @@ export default function Home() {
                 type="number"
                 id="stopLoss"
                 name="Stop Loss"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={stopLoss}
                 onChange={(event) => setStopLoss(parseInt(event.target.value))}
               />
@@ -204,7 +204,7 @@ export default function Home() {
                 type="number"
                 id="exit"
                 name="exit"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={exit}
                 onChange={(event) => setExit(parseInt(event.target.value))}
               />
@@ -216,7 +216,7 @@ export default function Home() {
               <select
                 id="status"
                 name="Status"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={status}
                 onChange={(event) => setStatus(event.target.value)}
               >
