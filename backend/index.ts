@@ -15,6 +15,7 @@ import * as swaggerUi from 'swagger-ui-express';
 import * as swaggerDocument from './swagger.json';
 
 import orderRouter from './src/orders/orders.route';
+import tmsAuthRouter from './src/tms/tmsAuth.route';
 import { scanNotificationTriggers } from './src/common/utils/notification';
 
 app.enable('trust proxy');
@@ -45,6 +46,7 @@ app.post('/__space/v0/actions', async (req, res, next) => {
 });
 
 app.use('/orders', orderRouter);
+app.use('/tms-auth', tmsAuthRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(errorLogger);
