@@ -5,7 +5,6 @@ micros:
     engine: next
     dev: "npm run dev"
     primary: true
-    public: true
 
   - name: stock-notifier-api
     src: backend
@@ -17,13 +16,12 @@ micros:
       - dist
       - node_modules
     run: "node dist/server.js"
-    public: true
     path: api
     presets:
       env:
         - name: MONGO_URI
           description: Mongo Uri to connect to mongo database
-          default: "mongodb://value:value@localhost:27017/stockNotifier?authSource=admin"
+          default: "mongodb://localhost:27017/stockNotifier?authSource=admin"
         - name: DISCORD_WEBHOOK_ID
           description: Discord webhook id
           default: "1234567890"
@@ -36,6 +34,7 @@ micros:
         - name: CHUKUL_PASSWORD
           description: Chukul password for authentication
           default: "our_password"
+      api_keys: true
     actions:
       - id: "scanNotificationTriggers"
         name: "scanNotificationTriggers"
