@@ -17,14 +17,17 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { symbol, title, entry, target, stopLoss, exit } = req.body;
+    const { symbol, title, entry, target, stopLoss, exit, quantity, type } =
+      req.body;
     const order = await createOrder(
       symbol,
       title,
       entry,
       target,
       stopLoss,
-      exit
+      exit,
+      quantity,
+      type
     );
     res.status(201).json(order);
   } catch (error) {
@@ -34,7 +37,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { entry, target, stopLoss, exit, status } = req.body;
+    const { entry, target, stopLoss, exit, status, type, quantity } = req.body;
     const order = await Order.findById(req.params.id);
     if (!order) {
       throw new Error(errorMessages.OBJECT_WITH_ID_NOT_FOUND);
@@ -45,6 +48,8 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     order.stopLoss = stopLoss;
     order.exit = exit;
     order.status = status;
+    order.type = type;
+    order.quantity = quantity;
     await order.save();
 
     res.status(200).json(order);

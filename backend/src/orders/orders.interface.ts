@@ -7,11 +7,15 @@ interface IOrder extends Document {
   stopLoss: number;
   exit: number;
   status: OrderStatus;
+  type: OrderType;
+  quantity: number;
   isDeleted: boolean;
 }
 
 type OrderStatus = 'OPEN' | 'CANCELLED' | 'COMPLETED';
 const OrderStatusEnum = ['OPEN', 'COMPLETED', 'CANCELLED'];
+type OrderType = 'BUY' | 'SELL';
+const OrderTypeEnum = ['BUY', 'SELL'];
 
 type IChukul = {
   _id: string;
@@ -20,4 +24,4 @@ type IChukul = {
   refreshToken: string;
 };
 
-export { IOrder, OrderStatus, OrderStatusEnum, IChukul };
+export { IOrder, OrderStatus, OrderStatusEnum, IChukul, OrderTypeEnum };

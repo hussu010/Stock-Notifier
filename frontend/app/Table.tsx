@@ -9,6 +9,8 @@ type TableRow = {
   stopLoss: number;
   exit: number;
   status: string;
+  quantity: number;
+  type: string;
 };
 
 type TableProps = {
@@ -21,7 +23,9 @@ type TableProps = {
     target: number,
     stopLoss: number,
     exit: number,
-    status: string
+    status: string,
+    quantity: number,
+    type: string
   ) => void;
 };
 
@@ -34,9 +38,11 @@ function Table(props: TableProps) {
         <tr>
           <th className="px-4 py-2">Title</th>
           <th className="px-4 py-2">Symbol</th>
+          <th className="px-4 py-2">Quantity</th>
           <th className="px-4 py-2">Entry</th>
           <th className="px-4 py-2">Target</th>
           <th className="px-4 py-2">Stop Loss</th>
+          <th className="px-4 py-2">Type</th>
         </tr>
       </thead>
       <tbody>
@@ -44,9 +50,11 @@ function Table(props: TableProps) {
           <tr key={row._id}>
             <td className="border px-4 py-2">{row.title}</td>
             <td className="border px-4 py-2">{row.symbol}</td>
+            <td className="border px-4 py-2">{row.quantity}</td>
             <td className="border px-4 py-2">{row.entry}</td>
             <td className="border px-4 py-2">{row.target}</td>
             <td className="border px-4 py-2">{row.stopLoss}</td>
+            <td className="border px-4 py-2">{row.type}</td>
             <td className="border px-4 py-2">
               <button
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
@@ -58,7 +66,9 @@ function Table(props: TableProps) {
                     row.target,
                     row.stopLoss,
                     row.exit,
-                    row.status
+                    row.status,
+                    row.quantity,
+                    row.type
                   )
                 }
               >

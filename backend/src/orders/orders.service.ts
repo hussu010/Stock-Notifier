@@ -6,7 +6,9 @@ const createOrder = async (
   entry: number,
   target: number,
   stopLoss: number,
-  exit: number
+  exit: number,
+  quantity: number,
+  type: string
 ) => {
   const order = new Order({
     symbol,
@@ -15,6 +17,8 @@ const createOrder = async (
     target,
     stopLoss,
     exit,
+    quantity,
+    type,
   });
   return await order.save();
 };
