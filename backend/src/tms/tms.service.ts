@@ -1,6 +1,6 @@
 import TmsAuth from './tmsAuth.model';
 
-import { ITmsAuth } from './tmsAuth.interface';
+import { ITmsAuth } from './tms.interface';
 
 const getTmsAuth = async () => {
   try {

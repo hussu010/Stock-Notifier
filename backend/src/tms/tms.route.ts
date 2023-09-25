@@ -2,8 +2,8 @@ import express from 'express';
 const router = express.Router();
 
 import { validateRequest } from '../common/middlewares/validateRequest';
-import { tmsAuthSchema } from './tmsAuth.schema';
-import { get, update } from './tmsAuth.controller';
+import { tmsAuthSchema } from './tms.schema';
+import { get, update } from './tms.controller';
 
 router.get('/', get);
 router.patch('/', tmsAuthSchema, validateRequest, update);

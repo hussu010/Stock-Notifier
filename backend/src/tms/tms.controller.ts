@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
-import TmsAuth from './tmsAuth.model';
-import { getTmsAuth, updateTmsAuth } from './tmsAuth.service';
-import { ITmsAuth } from './tmsAuth.interface';
+import { getTmsAuth, updateTmsAuth } from './tms.service';
+import { ITmsAuth } from './tms.interface';
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
   try {

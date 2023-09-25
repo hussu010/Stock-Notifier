@@ -2,7 +2,9 @@ import express, { Express } from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import('./src/common/config/dbConnect');
+if (process.env.NODE_ENV != 'test') {
+  import('./src/common/config/dbConnect');
+}
 
 const app: Express = express();
 import morgan from 'morgan';
@@ -15,7 +17,7 @@ import * as swaggerUi from 'swagger-ui-express';
 import * as swaggerDocument from './swagger.json';
 
 import orderRouter from './src/orders/orders.route';
-import tmsAuthRouter from './src/tms/tmsAuth.route';
+import tmsAuthRouter from './src/tms/tms.route';
 import { scanNotificationTriggers } from './src/common/utils/notification';
 
 app.enable('trust proxy');
