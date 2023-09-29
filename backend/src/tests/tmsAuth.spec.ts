@@ -21,6 +21,8 @@ describe('GET /tms-auth', () => {
 
   it('should return null if tmsAuth object does not exists', async () => {
     const res = await request(app).get('/tms-auth');
+
+    expect(res.status).toBe(200);
     expect(res.body).toBe(null);
   });
 
@@ -28,6 +30,8 @@ describe('GET /tms-auth', () => {
     const tmsAuth = await seedTmsAuth();
 
     const res = await request(app).get('/tms-auth');
+
+    expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('_id');
     expect(res.body).toHaveProperty('xsrfToken');
     expect(res.body.xsrfToken).toBe(tmsAuth.xsrfToken);
@@ -37,6 +41,10 @@ describe('GET /tms-auth', () => {
     expect(res.body._rid).toBe(tmsAuth._rid);
     expect(res.body).toHaveProperty('clientId');
     expect(res.body.clientId).toBe(tmsAuth.clientId);
+    expect(res.body).toHaveProperty('userId');
+    expect(res.body.userId).toBe(tmsAuth.userId);
+    expect(res.body).toHaveProperty('userName');
+    expect(res.body.userName).toBe(tmsAuth.userName);
   });
 });
 
@@ -64,6 +72,14 @@ describe('PATCH /tms-auth', () => {
             path: 'clientId',
             location: 'body',
           }),
+          expect.objectContaining({
+            path: 'userId',
+            location: 'body',
+          }),
+          expect.objectContaining({
+            path: 'userName',
+            location: 'body',
+          }),
         ]),
       })
     );
@@ -75,6 +91,8 @@ describe('PATCH /tms-auth', () => {
       _rid: '5f6a9f7b0a5c6f0017a7d8a5',
       xsrfToken: 'xsrfToken',
       clientId: 'clientId',
+      userId: 'userId',
+      userName: 'userName',
     });
 
     expect(res.status).toBe(200);
@@ -85,5 +103,11 @@ describe('PATCH /tms-auth', () => {
     expect(res.body._aid).toBe('5f6a9f7b0a5c6f0017a7d8a4');
     expect(res.body).toHaveProperty('_rid');
     expect(res.body._rid).toBe('5f6a9f7b0a5c6f0017a7d8a5');
+    expect(res.body).toHaveProperty('clientId');
+    expect(res.body.clientId).toBe('clientId');
+    expect(res.body).toHaveProperty('userId');
+    expect(res.body.userId).toBe('userId');
+    expect(res.body).toHaveProperty('userName');
+    expect(res.body.userName).toBe('userName');
   });
 });

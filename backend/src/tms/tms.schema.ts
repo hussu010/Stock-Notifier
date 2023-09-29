@@ -5,6 +5,8 @@ const tmsAuthSchema = [
   body('_aid').isString(),
   body('xsrfToken').isString(),
   body('clientId').isString(),
+  body('userId').isString(),
+  body('userName').isString(),
 ];
 
 export { tmsAuthSchema };

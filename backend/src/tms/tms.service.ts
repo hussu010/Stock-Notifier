@@ -20,6 +20,8 @@ const updateTmsAuth = async (credentials: ITmsAuth) => {
         _aid: credentials._aid,
         _rid: credentials._rid,
         clientId: credentials.clientId,
+        userId: credentials.userId,
+        userName: credentials.userName,
       });
       return await newTmsAuth.save();
     }
@@ -28,6 +30,8 @@ const updateTmsAuth = async (credentials: ITmsAuth) => {
     tmsAuth._aid = credentials._aid;
     tmsAuth._rid = credentials._rid;
     tmsAuth.clientId = credentials.clientId;
+    tmsAuth.userId = credentials.userId;
+    tmsAuth.userName = credentials.userName;
 
     return await tmsAuth.save();
   } catch (error) {

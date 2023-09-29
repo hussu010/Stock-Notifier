@@ -5,6 +5,8 @@ interface ITmsAuthDoc extends Document {
   _aid: string;
   xsrfToken: string;
   clientId: string;
+  userId: string;
+  userName: string;
 }
 
 const tmsAuthSchema = new mongoose.Schema<ITmsAuthDoc>(
@@ -13,6 +15,8 @@ const tmsAuthSchema = new mongoose.Schema<ITmsAuthDoc>(
     _aid: { type: String, required: true },
     xsrfToken: { type: String, required: true },
     clientId: { type: String, required: true },
+    userId: { type: String, required: true },
+    userName: { type: String, required: true },
   },
   {
     timestamps: true,
