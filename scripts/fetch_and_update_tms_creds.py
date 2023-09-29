@@ -8,6 +8,8 @@ load_dotenv()
 
 # TMS_URL = "https://tms32.nepsetms.com.np"
 TMS_URL = "https://demotrading.nepalstock.com"
+# API_ENDPOINT = "https://notifier-1-b7933411.deta.app"
+API_ENDPOINT = "http://127.0.0.1:4200"
 USERNAME = os.getenv("TMS_USERNAME")
 PASSWORD = os.getenv("TMS_PASSWORD")
 DETA_API_KEY = os.getenv("DETA_API_KEY")
@@ -60,6 +62,8 @@ authenticate_user_response = requests.post(
     })
 
 client_id = authenticate_user_response.json()["data"]["clientDealerMember"]["client"]["id"]
+user_id = authenticate_user_response.json()["data"]["user"]["id"]
+user_name = authenticate_user_response.json()["data"]["user"]["userName"]
 
 if (authenticate_user_response.status_code == 200):
     print("User authenticated successfully")
@@ -83,11 +87,13 @@ data = {
     "_rid": rid,
     "_aid": aid,
     "xsrfToken": xsrf_token,
-    "clientId": f"{client_id}"
+    "clientId": f"{client_id}",
+    "userId": f"{user_id}",
+    "userName": f"{user_name}",
 }
 
 print("Writing cookies to deta")
-response = requests.patch("https://notifier-1-b7933411.deta.app/api/tms-auth/", headers=headers, json=data)
+response = requests.patch(f"{API_ENDPOINT}/api/tms-auth/", headers=headers, json=data)
 if (response.status_code == 200):
     print("Writing cookies to deta complete")
 else:
