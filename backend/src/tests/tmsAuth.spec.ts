@@ -35,6 +35,8 @@ describe('GET /tms-auth', () => {
     expect(res.body._aid).toBe(tmsAuth._aid);
     expect(res.body).toHaveProperty('_rid');
     expect(res.body._rid).toBe(tmsAuth._rid);
+    expect(res.body).toHaveProperty('clientId');
+    expect(res.body.clientId).toBe(tmsAuth.clientId);
   });
 });
 
@@ -58,6 +60,10 @@ describe('PATCH /tms-auth', () => {
             path: 'xsrfToken',
             location: 'body',
           }),
+          expect.objectContaining({
+            path: 'clientId',
+            location: 'body',
+          }),
         ]),
       })
     );
@@ -68,6 +74,7 @@ describe('PATCH /tms-auth', () => {
       _aid: '5f6a9f7b0a5c6f0017a7d8a4',
       _rid: '5f6a9f7b0a5c6f0017a7d8a5',
       xsrfToken: 'xsrfToken',
+      clientId: 'clientId',
     });
 
     expect(res.status).toBe(200);

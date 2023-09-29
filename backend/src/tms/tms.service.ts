@@ -19,6 +19,7 @@ const updateTmsAuth = async (credentials: ITmsAuth) => {
         xsrfToken: credentials.xsrfToken,
         _aid: credentials._aid,
         _rid: credentials._rid,
+        clientId: credentials.clientId,
       });
       return await newTmsAuth.save();
     }
@@ -26,6 +27,7 @@ const updateTmsAuth = async (credentials: ITmsAuth) => {
     tmsAuth.xsrfToken = credentials.xsrfToken;
     tmsAuth._aid = credentials._aid;
     tmsAuth._rid = credentials._rid;
+    tmsAuth.clientId = credentials.clientId;
 
     return await tmsAuth.save();
   } catch (error) {

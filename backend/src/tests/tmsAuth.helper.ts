@@ -5,6 +5,7 @@ const seedTmsAuth = async () => {
     _aid: '_aid',
     _rid: '_rid',
     xsrfToken: 'xsrfToken',
+    clientId: 'clientId',
   });
 
   const newTmsAuth = await tmsAuth.save();

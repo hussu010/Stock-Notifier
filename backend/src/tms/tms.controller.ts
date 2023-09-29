@@ -15,8 +15,8 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authBody: ITmsAuth = req.body;
-    const { xsrfToken, _aid, _rid } = authBody;
-    const tmsAuth = await updateTmsAuth({ xsrfToken, _aid, _rid });
+    const { xsrfToken, _aid, _rid, clientId } = authBody;
+    const tmsAuth = await updateTmsAuth({ xsrfToken, _aid, _rid, clientId });
     res.status(200).json(tmsAuth);
   } catch (error) {
     next(error);
