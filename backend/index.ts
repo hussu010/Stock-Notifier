@@ -4,7 +4,8 @@ dotenv.config();
 
 import {
   getClientCollateralDetails,
-  refreshTmsAuth,
+  getDailyOrderBook,
+  isOrderEngineOpen,
 } from './src/tms/tms.utils';
 
 if (process.env.NODE_ENV != 'test') {
@@ -42,7 +43,10 @@ app.post('/__space/v0/actions', async (req, res, next) => {
 
     const clientCollateralDetails = await getClientCollateralDetails();
     console.log(clientCollateralDetails);
-    await refreshTmsAuth();
+
+    await getDailyOrderBook();
+
+    console.log('isOrderEngineOpen', await isOrderEngineOpen());
 
     if (event && event.id === 'scanNotificationTriggers') {
       await scanNotificationTriggers();

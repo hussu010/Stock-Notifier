@@ -8,7 +8,8 @@ const getClientCollateralDetails: () => Promise<ClientCollateralDetails> =
   async () => {
     try {
       const tmsAuth = await getTmsAuth();
-      if (tmsAuth === null) throw new Error('No TMS Auth credentials found.');
+      if (tmsAuth === null)
+        throw new Error('No TMS Auth credentials found, rerun login script...');
 
       const uuid = uuidv4();
       const base64EncodedHostSessionId = Buffer.from(`MIT=-${uuid}`).toString(
@@ -102,4 +103,69 @@ const refreshTmsAuth: () => Promise<void> = async () => {
   }
 };
 
-export { getClientCollateralDetails, refreshTmsAuth };
+const getDailyOrderBook: () => Promise<void> = async () => {
+  try {
+    const tmsAuth = await getTmsAuth();
+    if (tmsAuth === null) throw new Error('No TMS Auth credentials found.');
+
+    const { data } = await axios.get(
+      `${process.env.TMS_URL}/tmsapi/orderTradeApi/orderbook-v2/client/${tmsAuth.clientId}?&activeStatus=OPEN&
+      activeStatus=PARTIALLY_TRADED&activeStatus=PENDING&activeStatus=MODIFIED&activeStatus=COMPLETED&
+      activeStatus=CANCELLED&activeStatus=REJECTED&activeStatus=TMS_REJECTED&activeStatus=PARTIALLY_CANCELLED&
+      activeStatus=MODIFIED_CANCELLED`,
+      {
+        headers: {
+          Cookie: `_rid=${tmsAuth._rid}; _aid=${tmsAuth._aid}; XSRF-TOKEN=${tmsAuth.xsrfToken}`,
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)',
+          Referer: `${process.env.TMS_URL}/tms/member/search/client-search/${tmsAuth.clientId}`,
+          Host: process.env.TMS_URL?.split('//')[1],
+          'X-Xsrf-Token': tmsAuth.xsrfToken,
+          'Host-Session-Id':
+            'TVRJPS1lMDEzMzFhNi04OGRhLTRiMDEtOTk5Zi03YzE3M2Q1MzhkNGY=',
+          'Request-Owner': tmsAuth.userId,
+        },
+      }
+    );
+
+    console.log(data);
+  } catch (error) {
+    throw Error(`Error in getDailyOrderBook: ${error}`);
+  }
+};
+
+const isOrderEngineOpen: () => Promise<boolean> = async () => {
+  try {
+    const { data } = await axios.get(
+      `${process.env.TMS_URL}/tmsapi/metadata/serverTime`,
+      {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)',
+          Referer: `${process.env.TMS_URL}/tms/client/dashboard`,
+          Host: process.env.TMS_URL?.split('//')[1],
+        },
+      }
+    );
+
+    const serverTime = data.message;
+
+    let timeParts = serverTime.split(' ')[1].split(':');
+    let hour = parseInt(timeParts[0]);
+
+    if (hour === 11 || hour === 12 || hour === 13 || hour === 14) {
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    throw Error(`Error in getServerTime: ${error}`);
+  }
+};
+
+export {
+  getClientCollateralDetails,
+  refreshTmsAuth,
+  getDailyOrderBook,
+  isOrderEngineOpen,
+};
