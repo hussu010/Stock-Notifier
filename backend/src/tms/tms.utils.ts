@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 const { v4: uuidv4 } = require('uuid');
 
 import { getTmsAuth } from './tms.service';
@@ -38,8 +38,13 @@ const getClientCollateralDetails: () => Promise<ClientCollateralDetails> =
         utilizedCollateral: data.utilizedCollateral,
       };
     } catch (error) {
-      console.error(`Error in getClientCollateralDetails: ${error}`);
-      throw error;
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          console.log('TMS Auth credentials expired. Refreshing...');
+          await refreshTmsAuth();
+        }
+      }
+      throw Error(`Error in getClientCollateralDetails: ${error}`);
     }
   };
 
@@ -86,8 +91,14 @@ const refreshTmsAuth: () => Promise<void> = async () => {
       tmsAuth.save();
     }
   } catch (error) {
-    console.error(`Error in refreshTmsAuth: ${error}`);
-    throw error;
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        throw Error('Invalid Refresh Token, rerun login script...');
+      } else if (error.response?.status === 403) {
+        throw Error('Access Token Not Expired, please try again...');
+      }
+    }
+    throw Error(`Error in refreshTmsAuth: ${error}`);
   }
 };
 

@@ -2,6 +2,11 @@ import express, { Express } from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 
+import {
+  getClientCollateralDetails,
+  refreshTmsAuth,
+} from './src/tms/tms.utils';
+
 if (process.env.NODE_ENV != 'test') {
   import('./src/common/config/dbConnect');
 }
@@ -34,6 +39,10 @@ app.use(express.json());
 app.post('/__space/v0/actions', async (req, res, next) => {
   try {
     const event = req.body.event;
+
+    const clientCollateralDetails = await getClientCollateralDetails();
+    console.log(clientCollateralDetails);
+    await refreshTmsAuth();
 
     if (event && event.id === 'scanNotificationTriggers') {
       await scanNotificationTriggers();
