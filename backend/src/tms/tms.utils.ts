@@ -163,9 +163,30 @@ const isOrderEngineOpen: () => Promise<boolean> = async () => {
   }
 };
 
+const syncSecurities: () => Promise<void> = async () => {
+  try {
+    const { data } = await axios.get(
+      `${process.env.TMS_URL}/tmsapi/stock/securities`,
+      {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)',
+          Referer: `${process.env.TMS_URL}/tms/client/dashboard`,
+          Host: process.env.TMS_URL?.split('//')[1],
+        },
+      }
+    );
+
+    console.log(data);
+  } catch (error) {
+    throw Error(`Error in syncSecurities: ${error}`);
+  }
+};
+
 export {
   getClientCollateralDetails,
   refreshTmsAuth,
   getDailyOrderBook,
   isOrderEngineOpen,
+  syncSecurities,
 };
