@@ -2,6 +2,11 @@ certifi==2023.7.22
 charset-normalizer==3.3.0
 idna==3.4
 load-dotenv==0.1.0
+numpy==1.26.0
+opencv-python==4.8.1.78
+packaging==23.2
+Pillow==10.0.1
+pytesseract==0.3.10
 python-dotenv==1.0.0
 requests==2.31.0
 urllib3==2.0.5

@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 import base64
 import re
+from process_image import process_image_and_extract_text
 
 load_dotenv()
 
@@ -18,32 +19,41 @@ password_bytes = PASSWORD.encode('utf-8')
 password_base64_encoded = base64.b64encode(password_bytes)
 password_base64_encoded_string = password_base64_encoded.decode('utf-8')
 
-get_captcha_id = requests.get(
-    f"{TMS_URL}/tmsapi/authApi/captcha/id",
-    headers={
-        "Referer": f"{TMS_URL}/login",
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0",
-        "Host": TMS_URL.split("//")[-1],
-    })
-captcha_id = get_captcha_id.json()["id"]
+try:
+    get_captcha_id = requests.get(
+        f"{TMS_URL}/tmsapi/authApi/captcha/id",
+        headers={
+            "Referer": f"{TMS_URL}/login",
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0",
+            "Host": TMS_URL.split("//")[-1],
+        })
+    captcha_id = get_captcha_id.json()["id"]
 
-get_captcha_image = requests.get(
-    f"{TMS_URL}/tmsapi/authApi/captcha/image/{captcha_id}",
-    stream=True,
-    headers={
-        "Referer": f"{TMS_URL}/login",
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0",
-        "Host": TMS_URL.split("//")[-1],
-    })
+    get_captcha_image = requests.get(
+        f"{TMS_URL}/tmsapi/authApi/captcha/image/{captcha_id}",
+        stream=True,
+        headers={
+            "Referer": f"{TMS_URL}/login",
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0",
+            "Host": TMS_URL.split("//")[-1],
+        })
 
-get_captcha_image.raise_for_status()
-image_path = 'captcha_image.jpg'
-with open(image_path, 'wb') as file:
-    for chunk in get_captcha_image.iter_content(chunk_size=8192):
-        file.write(chunk)
-os.system(f'open {image_path}')
+    get_captcha_image.raise_for_status()
+    image_path = 'captcha_image.jpg'
+    with open(image_path, 'wb') as file:
+        for chunk in get_captcha_image.iter_content(chunk_size=8192):
+            file.write(chunk)
 
-captcha_value = input("Please enter the captcha value displayed on the page: ")
+except Exception as e:
+    print("oopse, there was an error fetching the captcha image")
+    print(e)
+    exit()
+
+captcha_value = process_image_and_extract_text(image_path)
+print(captcha_value)
+
+# os.system(f'open {image_path}')
+# captcha_value = input("Please enter the captcha value displayed on the page: ")
 
 authenticate_user_response = requests.post(
     f"{TMS_URL}/tmsapi/authApi/authenticate",

@@ -2,12 +2,23 @@ import cv2
 import numpy as np
 import pytesseract
 
-def process_image(input_path, output_path):
+def process_image_and_extract_text(input_path):
     # Read the image
     image = cv2.imread(input_path, cv2.IMREAD_COLOR)
+
+    height, width, _ = image.shape
+
+    # Let's define the cropping boundaries
+    left = 88
+    right = width - 88
+    top = 22
+    bottom = height - 22
+
+    # Crop the image to only get the captcha
+    cropped_image = image[top:bottom, left:right]
     
     # Convert the image to grayscale
-    grayscale_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    grayscale_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
 
     # Threshold the image to make the background white and the text black
     _, thresholded_image = cv2.threshold(grayscale_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
@@ -22,13 +33,8 @@ def process_image(input_path, output_path):
     inverted_image = cv2.bitwise_not(opened_image)
 
     # Save the processed image
-    cv2.imwrite(output_path, inverted_image)
-    
-    return inverted_image
+    cv2.imwrite("extracted_image.jpg", inverted_image)
 
-# Use the function
-processed_img = process_image("captcha_image1.jpg", "path_to_save_processed_image.jpg")
+    text = pytesseract.image_to_string(inverted_image)
 
-# Extract text using pytesseract
-text = pytesseract.image_to_string(processed_img)
-print(text)
+    return text
