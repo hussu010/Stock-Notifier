@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import pytesseract
+import re
 
 def process_image_and_extract_text(input_path):
     # Read the image
@@ -37,4 +38,5 @@ def process_image_and_extract_text(input_path):
 
     text = pytesseract.image_to_string(inverted_image)
 
+    # return ''.join([char.lower() for char in text if char.isalnum()])
     return text

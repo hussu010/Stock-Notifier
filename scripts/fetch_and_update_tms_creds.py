@@ -7,8 +7,8 @@ from process_image import process_image_and_extract_text
 
 load_dotenv()
 
-# TMS_URL = "https://tms32.nepsetms.com.np"
-TMS_URL = "https://demotrading.nepalstock.com"
+TMS_URL = "https://tms32.nepsetms.com.np"
+# TMS_URL = "https://demotrading.nepalstock.com"
 # API_ENDPOINT = "https://notifier-1-b7933411.deta.app"
 API_ENDPOINT = "http://127.0.0.1:4200"
 USERNAME = os.getenv("TMS_USERNAME")
@@ -19,57 +19,80 @@ password_bytes = PASSWORD.encode('utf-8')
 password_base64_encoded = base64.b64encode(password_bytes)
 password_base64_encoded_string = password_base64_encoded.decode('utf-8')
 
+def get_captcha():
+    try:
+        get_captcha_id = requests.get(
+            f"{TMS_URL}/tmsapi/authApi/captcha/id",
+            headers={
+                "Referer": f"{TMS_URL}/login",
+                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0",
+                "Host": TMS_URL.split("//")[-1],
+            })
+        print("Fetched captcha id successfully")
+        captcha_id = get_captcha_id.json()["id"]
+
+        get_captcha_image = requests.get(
+            f"{TMS_URL}/tmsapi/authApi/captcha/image/{captcha_id}",
+            stream=True,
+            headers={
+                "Referer": f"{TMS_URL}/login",
+                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0",
+                "Host": TMS_URL.split("//")[-1],
+            })
+        print("Fetched captcha image successfully")
+
+        get_captcha_image.raise_for_status()
+        image_path = 'captcha_image.jpg'
+        with open(image_path, 'wb') as file:
+            for chunk in get_captcha_image.iter_content(chunk_size=8192):
+                file.write(chunk)
+
+        return image_path, captcha_id
+
+    except Exception as e:
+        print("oopse, there was an error fetching the captcha image")
+        print(e)
+        exit()
+
+image_path, captcha_id = get_captcha()
+captcha_value = process_image_and_extract_text(image_path)
+
+def send_auth_request(captcha_id, captcha_value):
+    return requests.post(
+        f"{TMS_URL}/tmsapi/authApi/authenticate",
+        json={
+            "userName": USERNAME,
+            "password": password_base64_encoded_string,
+            "captchaIdentifier": captcha_id,
+            "userCaptcha": captcha_value
+        },
+        headers={
+            "Content-Type": "application/json",
+            "Origin": TMS_URL,
+            "Referer": f"{TMS_URL}/login",
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0",
+            "Host": TMS_URL.split("//")[-1],
+        })
+
 try:
-    get_captcha_id = requests.get(
-        f"{TMS_URL}/tmsapi/authApi/captcha/id",
-        headers={
-            "Referer": f"{TMS_URL}/login",
-            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0",
-            "Host": TMS_URL.split("//")[-1],
-        })
-    captcha_id = get_captcha_id.json()["id"]
+    authenticate_user_response = send_auth_request(captcha_id, captcha_value)
+    authenticate_user_response.raise_for_status()
 
-    get_captcha_image = requests.get(
-        f"{TMS_URL}/tmsapi/authApi/captcha/image/{captcha_id}",
-        stream=True,
-        headers={
-            "Referer": f"{TMS_URL}/login",
-            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0",
-            "Host": TMS_URL.split("//")[-1],
-        })
-
-    get_captcha_image.raise_for_status()
-    image_path = 'captcha_image.jpg'
-    with open(image_path, 'wb') as file:
-        for chunk in get_captcha_image.iter_content(chunk_size=8192):
-            file.write(chunk)
-
+except requests.HTTPError as err:
+    if authenticate_user_response.status_code == 401:
+        if authenticate_user_response.json()['message'] == "CAPTCHA_VALIDATION_FAILED":
+            print("Automated Captcha Verification Failed...")
+            image_path, captcha_id = get_captcha()
+            os.system(f'open {image_path}')
+            manual_captcha_value = input("Please enter the captcha value displayed on the page: ")
+            authenticate_user_response = send_auth_request(captcha_id, manual_captcha_value)
+            print(authenticate_user_response.json())
+    else:
+        print(f"HTTP error occurred: {err}")
 except Exception as e:
-    print("oopse, there was an error fetching the captcha image")
+    print("oopse, there was an error authenticating the user")
     print(e)
     exit()
-
-captcha_value = process_image_and_extract_text(image_path)
-print(captcha_value)
-
-# os.system(f'open {image_path}')
-# captcha_value = input("Please enter the captcha value displayed on the page: ")
-
-authenticate_user_response = requests.post(
-    f"{TMS_URL}/tmsapi/authApi/authenticate",
-    json={
-        "userName": USERNAME,
-        "password": password_base64_encoded_string,
-        "captchaIdentifier": captcha_id,
-        "userCaptcha": captcha_value
-    },
-    headers={
-        "Content-Type": "application/json",
-        "Origin": TMS_URL,
-        "Referer": f"{TMS_URL}/login",
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0",
-        "Host": TMS_URL.split("//")[-1],
-    })
 
 client_id = authenticate_user_response.json()["data"]["clientDealerMember"]["client"]["id"]
 user_id = authenticate_user_response.json()["data"]["user"]["id"]
