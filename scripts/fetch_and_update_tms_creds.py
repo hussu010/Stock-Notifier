@@ -7,8 +7,8 @@ from process_image import process_image_and_extract_text
 
 load_dotenv()
 
-TMS_URL = "https://tms32.nepsetms.com.np"
-# TMS_URL = "https://demotrading.nepalstock.com"
+# TMS_URL = "https://tms32.nepsetms.com.np"
+TMS_URL = "https://demotrading.nepalstock.com"
 # API_ENDPOINT = "https://notifier-1-b7933411.deta.app"
 API_ENDPOINT = "http://127.0.0.1:4200"
 USERNAME = os.getenv("TMS_USERNAME")
@@ -86,7 +86,6 @@ except requests.HTTPError as err:
             os.system(f'open {image_path}')
             manual_captcha_value = input("Please enter the captcha value displayed on the page: ")
             authenticate_user_response = send_auth_request(captcha_id, manual_captcha_value)
-            print(authenticate_user_response.json())
     else:
         print(f"HTTP error occurred: {err}")
 except Exception as e:
@@ -94,16 +93,16 @@ except Exception as e:
     print(e)
     exit()
 
-client_id = authenticate_user_response.json()["data"]["clientDealerMember"]["client"]["id"]
-user_id = authenticate_user_response.json()["data"]["user"]["id"]
-user_name = authenticate_user_response.json()["data"]["user"]["userName"]
-
 if (authenticate_user_response.status_code == 200):
     print("User authenticated successfully")
 else:
     print("oopse, there was an error authenticating the user")
     print(authenticate_user_response.status_code)
     exit()
+
+client_id = authenticate_user_response.json()["data"]["clientDealerMember"]["client"]["id"]
+user_id = authenticate_user_response.json()["data"]["user"]["id"]
+user_name = authenticate_user_response.json()["data"]["user"]["userName"]
 
 cookies = authenticate_user_response.headers["Set-Cookie"].split(', ')
 rid = re.search('_rid=([^;]*)', cookies[0]).group(1)
@@ -126,9 +125,11 @@ data = {
 }
 
 print("Writing cookies to deta")
-response = requests.patch(f"{API_ENDPOINT}/api/tms-auth/", headers=headers, json=data)
-if (response.status_code == 200):
+try:
+    response = requests.patch(f"{API_ENDPOINT}/api/tms-auth/", headers=headers, json=data)
+    response.raise_for_status()
     print("Writing cookies to deta complete")
-else:
+except Exception as e:
     print("oopse, there was an error writing cookies")
-    print(response.json())
+    print(e)
+    exit()
