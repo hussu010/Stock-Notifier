@@ -38,5 +38,4 @@ def process_image_and_extract_text(input_path):
 
     text = pytesseract.image_to_string(inverted_image)
 
-    # return ''.join([char.lower() for char in text if char.isalnum()])
-    return text
+    return ''.join([char.lower() for char in text if char.isalnum()])

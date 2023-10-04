@@ -128,7 +128,7 @@ const getDailyOrderBook: () => Promise<void> = async () => {
       }
     );
 
-    console.log(data);
+    console.log('Daily Order Book', data);
   } catch (error) {
     throw Error(`Error in getDailyOrderBook: ${error}`);
   }
