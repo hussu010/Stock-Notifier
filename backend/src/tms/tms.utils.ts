@@ -1,8 +1,13 @@
 import axios, { AxiosError } from 'axios';
 const { v4: uuidv4 } = require('uuid');
+import fs from 'fs';
 
 import { getTmsAuth } from './tms.service';
-import { ClientCollateralDetails } from './tms.interface';
+import {
+  ClientCollateralDetails,
+  DPHolding,
+  TmsApiStockSecurity,
+} from './tms.interface';
 
 const getClientCollateralDetails: () => Promise<ClientCollateralDetails> =
   async () => {
@@ -163,23 +168,90 @@ const isOrderEngineOpen: () => Promise<boolean> = async () => {
   }
 };
 
-const syncSecurities: () => Promise<void> = async () => {
+const seedSecurities: () => Promise<TmsApiStockSecurity[]> = async () => {
   try {
+    const tmsAuth = await getTmsAuth();
+    if (tmsAuth === null) throw new Error('No TMS Auth credentials found.');
+
     const { data } = await axios.get(
       `${process.env.TMS_URL}/tmsapi/stock/securities`,
       {
         headers: {
+          Cookie: `_rid=${tmsAuth._rid}; _aid=${tmsAuth._aid}; XSRF-TOKEN=${tmsAuth.xsrfToken}`,
           'User-Agent':
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)',
           Referer: `${process.env.TMS_URL}/tms/client/dashboard`,
           Host: process.env.TMS_URL?.split('//')[1],
+          'X-Xsrf-Token': tmsAuth.xsrfToken,
+          'Host-Session-Id':
+            'TVRJPS1lMDEzMzFhNi04OGRhLTRiMDEtOTk5Zi03YzE3M2Q1MzhkNGY=',
+          'Request-Owner': tmsAuth.userId,
         },
       }
     );
 
-    console.log(data);
+    const securities: TmsApiStockSecurity[] = data.map((security: any) => {
+      return {
+        exchangeSecurityId: security.exchangeSecurityId,
+        symbol: security.symbol,
+        securityName: security.securityName,
+      };
+    });
+
+    const jsData =
+      'export default ' + JSON.stringify(securities, null, 2) + ';';
+
+    fs.writeFile('src/common/config/securities.ts', jsData, (err) => {
+      if (err) {
+        console.error('There was an error writing the file:', err);
+      } else {
+        console.log('File has been written successfully!');
+      }
+    });
+
+    return securities;
   } catch (error) {
-    throw Error(`Error in syncSecurities: ${error}`);
+    throw Error(`Error in seedSecurities: ${error}`);
+  }
+};
+
+const getDPHoldings: () => Promise<DPHolding[]> = async () => {
+  try {
+    const tmsAuth = await getTmsAuth();
+    if (tmsAuth === null) throw new Error('No TMS Auth credentials found.');
+
+    const { data } = await axios.get(
+      `${process.env.TMS_URL}/tmsapi/dp-holding/client/freebalance/${tmsAuth.clientId}/CLI`,
+      {
+        headers: {
+          Cookie: `_rid=${tmsAuth._rid}; _aid=${tmsAuth._aid}; XSRF-TOKEN=${tmsAuth.xsrfToken}`,
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)',
+          Referer: `${process.env.TMS_URL}/tms/client/dashboard`,
+          Host: process.env.TMS_URL?.split('//')[1],
+          'X-Xsrf-Token': tmsAuth.xsrfToken,
+          'Host-Session-Id':
+            'TVRJPS1lMDEzMzFhNi04OGRhLTRiMDEtOTk5Zi03YzE3M2Q1MzhkNGY=',
+          'Request-Owner': tmsAuth.userId,
+        },
+      }
+    );
+
+    const holdings: DPHolding[] = data.map((holding: any) => {
+      return {
+        scrip: holding.scrip,
+        currentBalance: holding.currentBalance,
+        previousCloseprice: holding.previousCloseprice,
+        ltp: holding.ltp,
+        cdsFreeBalance: holding.cdsFreeBalance,
+        cdsTotalBalance: holding.cdsTotalBalance,
+        symbolName: holding.symbolName,
+      };
+    });
+
+    return holdings;
+  } catch (error) {
+    throw Error(`Error in getDPHoldings: ${error}`);
   }
 };
 
@@ -188,5 +260,6 @@ export {
   refreshTmsAuth,
   getDailyOrderBook,
   isOrderEngineOpen,
-  syncSecurities,
+  seedSecurities,
+  getDPHoldings,
 };

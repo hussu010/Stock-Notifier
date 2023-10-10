@@ -6,7 +6,7 @@ import {
   getClientCollateralDetails,
   getDailyOrderBook,
   isOrderEngineOpen,
-  syncSecurities,
+  getDPHoldings,
 } from './src/tms/tms.utils';
 
 if (process.env.NODE_ENV != 'test') {
@@ -47,7 +47,7 @@ app.post('/__space/v0/actions', async (req, res, next) => {
 
     await getDailyOrderBook();
 
-    await syncSecurities();
+    await getDPHoldings();
 
     console.log('isOrderEngineOpen', await isOrderEngineOpen());
 

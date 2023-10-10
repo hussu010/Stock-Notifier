@@ -12,4 +12,20 @@ interface ClientCollateralDetails {
   utilizedCollateral: number;
 }
 
-export { ITmsAuth, ClientCollateralDetails };
+interface DPHolding {
+  scrip: string;
+  currentBalance: number;
+  previousCloseprice: number;
+  ltp: number;
+  cdsFreeBalance: number;
+  cdsTotalBalance: number;
+  symbolName: string;
+}
+
+interface TmsApiStockSecurity {
+  exchangeSecurityId: number;
+  symbol: string;
+  securityName: string;
+}
+
+export { ITmsAuth, ClientCollateralDetails, DPHolding, TmsApiStockSecurity };
