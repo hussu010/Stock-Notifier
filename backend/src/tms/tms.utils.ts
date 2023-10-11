@@ -8,6 +8,7 @@ import {
   DPHolding,
   TmsApiStockSecurity,
 } from './tms.interface';
+import securities from '../common/config/securities';
 
 const getClientCollateralDetails: () => Promise<ClientCollateralDetails> =
   async () => {
@@ -255,6 +256,37 @@ const getDPHoldings: () => Promise<DPHolding[]> = async () => {
   }
 };
 
+const getStockQuote: (symbol: string) => Promise<any> = async (symbol) => {
+  try {
+    const security = securities.find((security) => security.symbol === symbol);
+    if (!security) throw Error(`Security ${symbol} not found.`);
+
+    const tmsAuth = await getTmsAuth();
+    if (tmsAuth === null) throw new Error('No TMS Auth credentials found.');
+
+    const { data } = await axios.get(
+      `${process.env.TMS_URL}/tmsapi/rtApi/ws/stockQuote/${security.exchangeSecurityId}`,
+      {
+        headers: {
+          Cookie: `_rid=${tmsAuth._rid}; _aid=${tmsAuth._aid}; XSRF-TOKEN=${tmsAuth.xsrfToken}`,
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)',
+          Referer: `${process.env.TMS_URL}/tms/member/search/client-search/${tmsAuth.clientId}`,
+          Host: process.env.TMS_URL?.split('//')[1],
+          'X-Xsrf-Token': tmsAuth.xsrfToken,
+          'Host-Session-Id':
+            'TVRJPS1lMDEzMzFhNi04OGRhLTRiMDEtOTk5Zi03YzE3M2Q1MzhkNGY=',
+          'Request-Owner': tmsAuth.userId,
+        },
+      }
+    );
+
+    console.log(data.payload.data);
+  } catch (error) {
+    throw Error(`Error in getStockQuote: ${error}`);
+  }
+};
+
 export {
   getClientCollateralDetails,
   refreshTmsAuth,
@@ -262,4 +294,5 @@ export {
   isOrderEngineOpen,
   seedSecurities,
   getDPHoldings,
+  getStockQuote,
 };

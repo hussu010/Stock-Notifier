@@ -7,8 +7,8 @@ from process_image import process_image_and_extract_text
 
 load_dotenv()
 
-# TMS_URL = "https://tms32.nepsetms.com.np"
-TMS_URL = "https://demotrading.nepalstock.com"
+TMS_URL = "https://tms32.nepsetms.com.np"
+# TMS_URL = "https://demotrading.nepalstock.com"
 # API_ENDPOINT = "https://notifier-1-b7933411.deta.app"
 API_ENDPOINT = "http://127.0.0.1:4200"
 USERNAME = os.getenv("TMS_USERNAME")
