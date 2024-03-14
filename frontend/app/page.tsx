@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { Inter } from "next/font/google";
 
 import { useState, useEffect } from "react";
@@ -16,11 +15,13 @@ export default function Home() {
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState("");
   const [symbol, setSymbol] = useState("");
+  const [quantity, setQuantity] = useState(0);
   const [entry, setEntry] = useState(0);
   const [target, setTarget] = useState(0);
   const [stopLoss, setStopLoss] = useState(0);
   const [exit, setExit] = useState(0);
   const [status, setStatus] = useState("OPEN");
+  const [type, setType] = useState("BUY");
 
   const API_BASE_URI = "/api";
 
@@ -41,7 +42,9 @@ export default function Home() {
     target: number,
     stopLoss: number,
     exit: number,
-    status: string
+    status: string,
+    quantity: number,
+    type: string
   ) => {
     setIsEditing(true);
     setEditId(editId);
@@ -52,6 +55,8 @@ export default function Home() {
     setExit(exit);
     setStatus(status);
     setShowForm(true);
+    setType(type);
+    setQuantity(quantity);
   };
 
   const handleDelete = async (_id: string) => {
@@ -93,7 +98,16 @@ export default function Home() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ symbol, entry, target, stopLoss, exit, status }),
+      body: JSON.stringify({
+        symbol,
+        entry,
+        target,
+        stopLoss,
+        exit,
+        status,
+        quantity,
+        type,
+      }),
     };
 
     const response = await fetch(requestUrl, requestOptions);
@@ -113,6 +127,8 @@ export default function Home() {
     setStopLoss(0);
     setExit(0);
     setStatus("OPEN");
+    setType("BUY");
+    setQuantity(0);
     setIsEditing(false);
 
     fetch(`${API_BASE_URI}/orders`)
@@ -151,10 +167,23 @@ export default function Home() {
                 type="text"
                 id="title"
                 name="title"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={symbol}
                 disabled={isEditing}
                 onChange={(event) => setSymbol(event.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="quantity" className="block font-bold mb-2">
+                Quantity
+              </label>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                className="border rounded w-full py-2 px-3 text-black"
+                value={quantity}
+                onChange={(event) => setQuantity(parseInt(event.target.value))}
               />
             </div>
             <div className="mb-4">
@@ -165,7 +194,7 @@ export default function Home() {
                 type="number"
                 id="entry"
                 name="entry"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={entry}
                 onChange={(event) => setEntry(parseInt(event.target.value))}
               />
@@ -178,7 +207,7 @@ export default function Home() {
                 type="number"
                 id="target"
                 name="target"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={target}
                 onChange={(event) => setTarget(parseInt(event.target.value))}
               />
@@ -191,7 +220,7 @@ export default function Home() {
                 type="number"
                 id="stopLoss"
                 name="Stop Loss"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={stopLoss}
                 onChange={(event) => setStopLoss(parseInt(event.target.value))}
               />
@@ -204,10 +233,25 @@ export default function Home() {
                 type="number"
                 id="exit"
                 name="exit"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={exit}
                 onChange={(event) => setExit(parseInt(event.target.value))}
               />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="type" className="block font-bold mb-2">
+                Type
+              </label>
+              <select
+                id="type"
+                name="Type"
+                className="border rounded w-full py-2 px-3 text-black"
+                value={type}
+                onChange={(event) => setType(event.target.value)}
+              >
+                <option value="BUY">BUY</option>
+                <option value="SELL">SELL</option>
+              </select>
             </div>
             <div className="mb-4">
               <label htmlFor="status" className="block font-bold mb-2">
@@ -216,7 +260,7 @@ export default function Home() {
               <select
                 id="status"
                 name="Status"
-                className="border rounded w-full py-2 px-3"
+                className="border rounded w-full py-2 px-3 text-black"
                 value={status}
                 onChange={(event) => setStatus(event.target.value)}
               >
@@ -242,6 +286,8 @@ export default function Home() {
                 setStopLoss(0);
                 setExit(0);
                 setStatus("OPEN");
+                setType("BUY");
+                setQuantity(0);
                 setIsEditing(false);
               }}
             >

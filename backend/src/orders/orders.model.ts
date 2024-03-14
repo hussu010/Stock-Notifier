@@ -10,6 +10,8 @@ const orderSchema = new mongoose.Schema<IOrder>(
     stopLoss: { type: Number, required: true },
     exit: { type: Number },
     status: { type: String, required: true, default: 'OPEN' },
+    type: { type: String, required: true },
+    quantity: { type: Number, required: true },
     isDeleted: { type: Boolean, required: true, default: false },
   },
   {

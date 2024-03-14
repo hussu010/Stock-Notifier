@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { body, param } from 'express-validator';
-import { OrderStatusEnum } from './orders.interface';
+import { OrderStatusEnum, OrderTypeEnum } from './orders.interface';
 import { stockSymbolData } from '../common/config/constants';
 import { binarySearchStockArray } from '../common/utils/stock';
 import { errorMessages } from '../common/config/messages';
@@ -42,6 +42,10 @@ const createOrderSchema = [
       }
       return true;
     }),
+  body('type')
+    .isIn(OrderTypeEnum)
+    .withMessage('Invalid type. Valid values are: BUY, SELL'),
+  body('quantity').isNumeric(),
 ];
 
 const updateOrderSchema = [
@@ -77,6 +81,10 @@ const updateOrderSchema = [
     .withMessage(
       `Invalid type. Valid values are: ${OrderStatusEnum.join(', ')}`
     ),
+  body('type')
+    .isIn(OrderTypeEnum)
+    .withMessage('Invalid type. Valid values are: BUY, SELL'),
+  body('quantity').isNumeric(),
   param('id', errorMessages.INVALID_OBJECT_ID).custom((value) => {
     return mongoose.Types.ObjectId.isValid(value);
   }),
