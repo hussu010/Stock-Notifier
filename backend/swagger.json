@@ -192,6 +192,135 @@
           }
         }
       }
+    },
+    "/alerts/": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AlertList"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          }
+        }
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AlertBody"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "alert created succefully.",
+            "schema": {
+              "$ref": "#/definitions/AlertResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/BadRequestError"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          }
+        }
+      }
+    },
+    "/alerts/{id}": {
+      "patch": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AlertBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "alert updated successfully.",
+            "schema": {
+              "$ref": "#/definitions/AlertResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/BadRequestError"
+            }
+          },
+          "404": {
+            "description": "alert not found.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            }
+          }
+        }
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "alert deleted.",
+            "schema": {
+              "$ref": "#/definitions/SingleMessage"
+            },
+            "400": {
+              "description": "Bad request.",
+              "schema": {
+                "$ref": "#/definitions/BadRequestError"
+              }
+            },
+            "404": {
+              "description": "alert not found.",
+              "schema": {
+                "$ref": "#/definitions/SingleMessage"
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "schema": {
+                "$ref": "#/definitions/SingleMessage"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {

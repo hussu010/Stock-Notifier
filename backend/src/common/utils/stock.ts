@@ -1,6 +1,7 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import Chukul from '../../orders/chukul.model';
+import { response } from 'express';
 
 type stockSymbolData = {
   id: number;
@@ -123,7 +124,7 @@ const getStockPrice = async (symbol: string) => {
   try {
     // const accessToken = await getValidAccessToken();
 
-    const { data } = await axios.get(
+    const response: AxiosResponse = await axios.get(
       `https://chukul.com/api/data/historydata/?symbol=${symbol}`,
       {
         headers: {
@@ -135,11 +136,11 @@ const getStockPrice = async (symbol: string) => {
         },
       }
     );
-
+    const data = response.data;
     const latestPrice = data[0].close;
-    return latestPrice;
+    return { success: true, latestPrice };
   } catch (error: any) {
-    throw new Error(error.message);
+    return { success: false, latestPrice: 0 };
   }
 };
 
